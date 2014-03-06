@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
@@ -15,13 +16,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -38,8 +35,10 @@ public class MCStatsCommand extends Command {
 
 	@Override
 	public void exec(final Server server, final Channel channel, final Source user, final String[] args) {
+		final Receiver receiver = channel == null ? user : channel;
+
 		if (args.length != 1) {
-			channel.sendMessage(Codes.RED + "Outputs MCStats informations with !stats <name>");
+			receiver.sendMessage(Codes.RED + "Outputs MCStats informations with !stats <name>");
 			return;
 		}
 
@@ -48,11 +47,11 @@ public class MCStatsCommand extends Command {
 
 			final String mcStatsURL = "http://mcstats.org/plugin/";
 			final String pluginStatsURL = mcStatsURL + args[0];
-			final Document doc = parse(getPage(pluginStatsURL));
+			final Document doc = WebUtil.getPage(pluginStatsURL);
 			final PluginStats stats = PluginStats.get(doc);
 
 			try {
-				final String globalStatsJsonString = getPage("http://api.mcstats.org/1.0/" + stats.name + "/graph/Global+Statistics");
+				final String globalStatsJsonString = WebUtil.getString("http://api.mcstats.org/1.0/" + stats.name + "/graph/Global+Statistics");
 				stats.getMaxAverage(new JsonParser().parse(globalStatsJsonString).getAsJsonObject());
 			} catch (Exception e) {
 				LOG.error(e.getMessage(), e);
@@ -66,7 +65,7 @@ public class MCStatsCommand extends Command {
 			messages.add(Codes.UNDERLINE + "Servers|" + Codes.RESET + " Now: " + Codes.BOLD + stats.servers + Codes.RESET + " | Diff: " + colorizeDiff(stats.serversDiff, false) + " | Max: " + Codes.BLUE + stats.serversMax + Codes.RESET + " | Month: ~" + Codes.BLUE + stats.serversAverage);
 			messages.add(Codes.UNDERLINE + "Players|" + Codes.RESET + " Now: " + Codes.BOLD + stats.players + Codes.RESET + " | Diff: " + colorizeDiff(stats.playersDiff, false) + " | Max: " + Codes.BLUE + stats.playersMax + Codes.RESET + " | Month: ~" + Codes.BLUE + stats.playersAverage);
 
-			final String authModeJsonString = getPage("http://api.mcstats.org/1.0/" + stats.name + "/graph/Auth+Mode");
+			final String authModeJsonString = WebUtil.getString("http://api.mcstats.org/1.0/" + stats.name + "/graph/Auth+Mode");
 			if (!authModeJsonString.contains("NO DATA")) {
 				final JsonObject authModeJson = new JsonParser().parse(authModeJsonString).getAsJsonObject();
 				final JsonArray array = authModeJson.getAsJsonArray("data");
@@ -91,40 +90,14 @@ public class MCStatsCommand extends Command {
 			}
 
 			for (final String msg : messages) {
-				channel.sendMessage(msg);
+				receiver.sendMessage(msg);
 			}
 		} catch (final FileNotFoundException | MalformedURLException | IndexOutOfBoundsException | NumberFormatException e) {
 			LOG.info("No stats found for plugin " + args[0], e);
-			channel.sendMessage(Codes.RED + "No stats found for plugin " + args[0]);
+			receiver.sendMessage(Codes.RED + "No stats found for plugin " + args[0]);
 		} catch (final IOException e) {
-			channel.sendMessage(Codes.RED + "Failed: " + e.getMessage());
+			receiver.sendMessage(Codes.RED + "Failed: " + e.getMessage());
 		}
-	}
-
-	private String getPage(final String urlString) throws IOException {
-		final URL url = new URL(urlString);
-
-		final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-		connection.setConnectTimeout(5_000);
-		connection.setReadTimeout(5_000);
-		connection.setUseCaches(false);
-
-		final BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-		final StringBuilder buffer = new StringBuilder();
-
-		String line;
-		while ((line = input.readLine()) != null) {
-			buffer.append(line);
-			buffer.append('\n');
-		}
-
-		final String page = buffer.toString();
-
-		input.close();
-
-		return page;
 	}
 
 	private Document parse(final String page) {

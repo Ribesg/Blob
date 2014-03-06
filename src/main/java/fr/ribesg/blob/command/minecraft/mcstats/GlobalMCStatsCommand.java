@@ -4,21 +4,19 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.util.ArtUtil;
+import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Comparator;
@@ -47,6 +45,8 @@ public class GlobalMCStatsCommand extends Command {
 
 	@Override
 	public void exec(final Server server, final Channel channel, final Source user, final String[] args) {
+		final Receiver receiver = channel == null ? user : channel;
+
 		if (args.length != 0 && args.length != 1) {
 			nope(channel);
 			return;
@@ -55,50 +55,24 @@ public class GlobalMCStatsCommand extends Command {
 		try {
 			if (args.length == 0) {
 				for (final String msg : new GlobalStats().getMessages()) {
-					channel.sendMessage(msg);
+					receiver.sendMessage(msg);
 				}
 			} else {
 				switch (args[0].toLowerCase()) {
 					case "auth":
-						channel.sendMessage(new AuthStats().getMessage());
+						receiver.sendMessage(new AuthStats().getMessage());
 					default:
-						channel.sendMessage(Codes.RED + "Invalid argument.");
+						receiver.sendMessage(Codes.RED + "Invalid argument.");
 						break;
 				}
 			}
 		} catch (final FileNotFoundException | MalformedURLException | IndexOutOfBoundsException | NumberFormatException |
 				SocketTimeoutException e) {
 			LOG.error("Could not contact MCStats API / or invalid response received", e);
-			channel.sendMessage(Codes.RED + "Could not contact MCStats API / or invalid response received");
+			receiver.sendMessage(Codes.RED + "Could not contact MCStats API / or invalid response received");
 		} catch (final IOException e) {
-			channel.sendMessage(Codes.RED + "Failed: " + e.getMessage());
+			receiver.sendMessage(Codes.RED + "Failed: " + e.getMessage());
 		}
-	}
-
-	private String getPage(final String urlString) throws IOException {
-		final URL url = new URL(urlString);
-
-		final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-		connection.setConnectTimeout(10000);
-		connection.setReadTimeout(10000);
-		connection.setUseCaches(false);
-
-		final BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-		final StringBuilder buffer = new StringBuilder();
-		String line;
-
-		while ((line = input.readLine()) != null) {
-			buffer.append(line);
-			buffer.append('\n');
-		}
-
-		final String page = buffer.toString();
-
-		input.close();
-
-		return page;
 	}
 
 	// !gstats
@@ -117,7 +91,7 @@ public class GlobalMCStatsCommand extends Command {
 
 		public GlobalStats() throws IOException {
 			final String apiUrl = "http://api.mcstats.org/1.0/All+Servers/graph/Global+Statistics";
-			final String jsonString = getPage(apiUrl);
+			final String jsonString = WebUtil.getString(apiUrl);
 			final JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
 			final JsonObject data = jsonObject.getAsJsonObject("data");
 			final JsonArray playersArray = data.getAsJsonArray("Players");
@@ -246,7 +220,7 @@ public class GlobalMCStatsCommand extends Command {
 
 		public AuthStats() throws IOException {
 			final String authUrl = "http://api.mcstats.org/1.0/All+Servers/graph/Auth+Mode";
-			final String jsonString = getPage(authUrl);
+			final String jsonString = WebUtil.getString(authUrl);
 			final JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
 			final JsonArray data = jsonObject.getAsJsonArray("data");
 			final JsonArray firstArray = data.get(0).getAsJsonArray();
