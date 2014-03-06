@@ -45,12 +45,12 @@ public class AuthorCommand extends Command {
 			if (args.length == 2) {
 				try {
 					amount = Integer.parseInt(args[1]);
-				} catch (NumberFormatException e) {
+				} catch (final NumberFormatException e) {
 					nope(receiver);
 					return;
 				}
 
-				if (amount <= 0) {
+				if (amount < 0) {
 					nope(receiver);
 					return;
 				}
@@ -64,8 +64,8 @@ public class AuthorCommand extends Command {
 
 			final SortedSet<Plugin> plugins = new TreeSet<>();
 			boolean hasNextPage;
-			final String devBukkitLink = "http://dev.bukkit.org/";
-			final String profilePageLink = devBukkitLink + "profiles/" + userInfo.name;
+			final String devBukkitLink = "http://dev.bukkit.org";
+			final String profilePageLink = devBukkitLink + "/profiles/" + userInfo.name;
 			String nextPageLink = profilePageLink + "/bukkit-plugins/";
 			do {
 				// Get the page
@@ -102,11 +102,16 @@ public class AuthorCommand extends Command {
 				for (final Element e : pluginsTd) {
 					if ("td".equalsIgnoreCase(e.tagName())) {
 						final Plugin plugin = new Plugin();
-						plugin.name = e.getElementsByTag("h2").get(0).getElementsByTag("a").get(0).ownText().trim();
+						final Element link = e.getElementsByTag("h2").get(0).getElementsByTag("a").get(0);
+						plugin.name = link.ownText().trim();
+						final String pluginUrl = devBukkitLink + link.attr("href");
+
+						final Document pluginDocument = WebUtil.getPage(pluginUrl);
+						plugin.downloadCount = Integer.parseInt(pluginDocument.getElementsByAttribute("data-value").first().attr("data-value"));
 						final String date = e.nextElementSibling().child(0).attr("data-epoch");
 						try {
 							plugin.lastUpdate = Long.parseLong(date);
-						} catch (NumberFormatException ex) {
+						} catch (final NumberFormatException ex) {
 							receiver.sendMessage(Codes.RED + "An error occured: Cannot parse \"" + date + "\" as a long.");
 							return;
 						}
@@ -124,17 +129,24 @@ public class AuthorCommand extends Command {
 			}
 			if (plugins.isEmpty()) { // Should not happen
 				receiver.sendMessage(Codes.RED + "Unknown user or user without plugins");
-			} else if (amount == 1) {
-				final Plugin plugin = it.next();
-				receiver.sendMessage("Last updated plugin: " + IrcUtil.preventPing(plugin.name) + " (" + formatDate(plugin.lastUpdate) + ")");
 			} else {
-				receiver.sendMessage((amount < plugins.size() ? amount : plugins.size()) + " last updated plugins:");
-				int i = 0;
-				while (it.hasNext() && i < amount) {
+				if (amount == 1) {
 					final Plugin plugin = it.next();
-					receiver.sendMessage("- " + IrcUtil.preventPing(plugin.name) + " (" + formatDate(plugin.lastUpdate) + ")");
-					i++;
+					receiver.sendMessage("Last updated plugin: " + IrcUtil.preventPing(plugin.name) + " (" + formatDate(plugin.lastUpdate) + ") | " + plugin.downloadCount + " DLs");
+				} else if (amount > 1) {
+					receiver.sendMessage((amount < plugins.size() ? amount : plugins.size()) + " last updated plugins:");
+					int i = 0;
+					while (it.hasNext() && i < amount) {
+						final Plugin plugin = it.next();
+						receiver.sendMessage("- " + IrcUtil.preventPing(plugin.name) + " (" + formatDate(plugin.lastUpdate) + ") | " + plugin.downloadCount + " DLs");
+						i++;
+					}
 				}
+				int total = 0;
+				for (final Plugin plugin : plugins) {
+					total += plugin.downloadCount;
+				}
+				receiver.sendMessage("Total downloads: " + Codes.BOLD + total);
 			}
 		} catch (final FileNotFoundException | MalformedURLException e) {
 			receiver.sendMessage(Codes.RED + "Unable to find that user!");
@@ -147,10 +159,11 @@ public class AuthorCommand extends Command {
 
 		public String name;
 		public long   lastUpdate;
+		public int    downloadCount;
 
 		@Override
 		public int compareTo(final Plugin o) {
-			return -Long.compare(lastUpdate, o.lastUpdate);
+			return lastUpdate > o.lastUpdate ? -1 : 1;
 		}
 	}
 
