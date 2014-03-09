@@ -11,13 +11,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class PluginCommand extends Command {
+
+	private static final String BUKKITDEV_URL = "http://dev.bukkit.org/bukkit-plugins/";
+	private static final String CURSE_URL     = "http://www.curse.com/bukkit-plugins/minecraft/";
 
 	private SimpleDateFormat dateFormat;
 
@@ -35,51 +38,83 @@ public class PluginCommand extends Command {
 			return;
 		}
 
+		final String pluginUrl = CURSE_URL + args[0].toLowerCase();
+
+		final Document doc;
 		try {
-			final String urlSring = "http://dev.bukkit.org/bukkit-plugins/" + args[0] + "/";
-
-			final Document document = WebUtil.getPage(urlSring);
-
-			final String name = document.getElementsByTag("h1").get(1).ownText().trim();
-			final StringBuilder authors = new StringBuilder();
-			final int downloads = Integer.parseInt(document.getElementsByAttribute("data-value").first().attr("data-value"));
-
-			final Elements containers = document.getElementsByClass("user-container");
-
-			if (!containers.isEmpty()) {
-				authors.append(IrcUtil.preventPing(containers.get(0).text().trim()));
-			}
-
-			for (int i = 1; i < containers.size(); ++i) {
-				authors.append(", ");
-				String author = containers.get(i).text().trim();
-				authors.append(IrcUtil.preventPing(author));
-			}
-
-			String files;
-			final Elements filesList = document.getElementsByClass("file-type");
-			if (filesList.size() > 0) {
-				final Element latest = filesList.get(0);
-				final String version = latest.nextElementSibling().ownText();
-				final String bukkitVersion = latest.parent().ownText().split("for")[1].trim();
-				final long fileDate = Long.parseLong(latest.nextElementSibling().nextElementSibling().attr("data-epoch"));
-				final String date = this.dateFormat.format(new Date(fileDate * 1000));
-				files = "Latest File: " + version + " for " + bukkitVersion + " (" + date + ")";
-			} else {
-				files = "No files (yet!)";
-			}
-
-			receiver.sendMessage(name + " (" + WebUtil.shortenUrl(urlSring) + ")");
-			receiver.sendMessage("Authors: " + authors.toString());
-			receiver.sendMessage("Downloads: " + downloads);
-			receiver.sendMessage(files);
-		} catch (final FileNotFoundException e) {
-			receiver.sendMessage(Codes.RED + "Project not found");
-		} catch (final MalformedURLException e) {
-			receiver.sendMessage(Codes.RED + "Unable to find that plugin!");
+			doc = WebUtil.getPage(pluginUrl);
 		} catch (final IOException e) {
-			receiver.sendMessage(Codes.RED + "Failed: " + e.getMessage());
+			receiver.sendMessage("Failed to get informations about '" + args[0] + "': " + e.getMessage());
+			return;
 		}
+
+		// Plugin name
+		final String pluginName = IrcUtil.preventPing(doc.select("#project-overview span.right").get(0).ownText());
+
+		// Authors list
+		final Elements authorsLinks = doc.select("ul.authors a");
+		final List<String> authorsList = new ArrayList<>();
+		for (final Element e : authorsLinks) {
+			final String author = e.ownText();
+			if (!authorsList.contains(author)) {
+				authorsList.add(author);
+			}
+		}
+		final StringBuilder builder = new StringBuilder(Codes.BOLD + IrcUtil.preventPing(authorsList.get(0)));
+		for (int i = 1; i < authorsList.size(); i++) {
+			builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(IrcUtil.preventPing(authorsList.get(i)));
+		}
+		final String authors = builder.toString();
+
+		// Total downloads
+		final String totalDownloads = getNbDownloads(doc.select("li.downloads").get(0).ownText());
+
+		// Monthly downloads
+		final String monthlyDownloads = getNbDownloads(doc.select("li.average-downloads").get(0).ownText());
+
+		// Last Update date & Creation date
+		final Elements updated = doc.select("li.updated");
+		final String lastUpdated = getDate(updated.get(0).getElementsByTag("abbr").get(0).attr("data-epoch"));
+		final String created = getDate(updated.get(1).getElementsByTag("abbr").get(0).attr("data-epoch"));
+
+		// Get latest download
+		final Element latestFileTr = doc.select("#tab-other-downloads div.listing-body > table > tbody > tr.even").get(0);
+		final String latestFileName = latestFileTr.getElementsByTag("a").get(0).ownText();
+		final String latestFileType = latestFileTr.child(1).ownText();
+		final String latestFileCBVersion = latestFileTr.child(2).ownText();
+		final String latestFileDate = getDate(latestFileTr.child(4).select("abbr.standard-date").get(0).attr("data-epoch"));
+
+		// Short url
+		String url;
+		try {
+			url = WebUtil.shortenUrl(BUKKITDEV_URL + args[0]);
+		} catch (final IOException e) {
+			url = BUKKITDEV_URL + args[0];
+		}
+
+		// Send
+		final String[] messages = {
+				Codes.BOLD + pluginName + Codes.RESET + " - " + Codes.LIGHT_GREEN + url,
+				"- Made by " + authors,
+				"- " + Codes.BOLD + monthlyDownloads + Codes.RESET + " monthly downloads, " +
+				Codes.BOLD + totalDownloads + Codes.RESET + " total downloads",
+				"- Created on " + Codes.BOLD + created + Codes.RESET +
+				", last updated on " + Codes.BOLD + lastUpdated,
+				"- Latest file is " + Codes.BOLD + latestFileName + Codes.RESET + ", a " + Codes.BOLD +
+				latestFileType + Codes.RESET + " build for " + Codes.BOLD + latestFileCBVersion +
+				Codes.RESET + " released on " + Codes.BOLD + latestFileDate
+		};
+		receiver.sendMessage(messages);
+	}
+
+	private String getNbDownloads(final String downloadsString) {
+		return downloadsString.substring(0, downloadsString.indexOf(' '));
+	}
+
+	private String getDate(final String dataEpoch) {
+		final long dateLong = Long.parseLong(dataEpoch);
+		final Date date = new Date(1_000 * dateLong);
+		return dateFormat.format(date);
 	}
 
 }

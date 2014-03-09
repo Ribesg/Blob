@@ -24,6 +24,8 @@ public class BlobClient extends Client {
 		final Server esperNet = new Server(this, "irc.esper.net", 6697, SSLType.TRUSTING);
 		esperNet.addChannel("#alix");
 		esperNet.addChannel("#blob");
+		esperNet.addChannel("#drtshock");
+		esperNet.addChannel("#ncube");
 		esperNet.addChannel("#ribesg");
 		this.getServers().add(esperNet);
 
@@ -35,7 +37,7 @@ public class BlobClient extends Client {
 		final Set<String> admins = new HashSet<>();
 		admins.add("Ribesg");
 
-		this.createCommandManager("!", admins);
+		this.createCommandManager("+", admins);
 
 		final CommandManager cmdManager = getCommandManager();
 
