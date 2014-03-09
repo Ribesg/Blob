@@ -1,4 +1,5 @@
 package fr.ribesg.blob;
+import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.bot.command.CommandManager;
@@ -49,5 +50,12 @@ public class BlobClient extends Client {
 
 		// Bot
 		cmdManager.registerCommand(new QuitCommand(this));
+	}
+
+	@Override
+	public void onClientJoinChannel(final Channel channel) {
+		if (channel.getServer().getUrl().contains("esper")) {
+			channel.sendMessage("Hi! This is an Anti-Willie-Banning-Cool-Bots message");
+		}
 	}
 }

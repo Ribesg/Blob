@@ -61,8 +61,15 @@ public class PluginCommand extends Command {
 			}
 		}
 		final StringBuilder builder = new StringBuilder(Codes.BOLD + IrcUtil.preventPing(authorsList.get(0)));
-		for (int i = 1; i < authorsList.size(); i++) {
-			builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(IrcUtil.preventPing(authorsList.get(i)));
+		if (authorsList.size() < 6) {
+			for (int i = 1; i < authorsList.size(); i++) {
+				builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(IrcUtil.preventPing(authorsList.get(i)));
+			}
+		} else {
+			for (int i = 1; i < 4; i++) {
+				builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(IrcUtil.preventPing(authorsList.get(i)));
+			}
+			builder.append(Codes.RESET).append(" and ").append(Codes.BOLD).append(authorsList.size() - 4).append(Codes.RESET).append(" others");
 		}
 		final String authors = builder.toString();
 
