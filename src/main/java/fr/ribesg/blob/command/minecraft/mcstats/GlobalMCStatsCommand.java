@@ -8,6 +8,7 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
+import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.ArtUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
@@ -39,8 +40,8 @@ public class GlobalMCStatsCommand extends Command {
 		formatter.setDecimalFormatSymbols(symbol);
 	}
 
-	public GlobalMCStatsCommand() {
-		super("gstats");
+	public GlobalMCStatsCommand(final CommandManager manager) {
+		super(manager, "gstats");
 	}
 
 	@Override
@@ -257,6 +258,6 @@ public class GlobalMCStatsCommand extends Command {
 
 	 */
 	private void nope(final Channel channel) {
-		channel.sendMessage(Codes.RED + "Global MCStats stats with !gstats [auth]");
+		channel.sendMessage(Codes.RED + "Global MCStats stats with " + this + " [auth]");
 	}
 }

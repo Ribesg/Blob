@@ -8,6 +8,7 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
+import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.ArtUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
@@ -29,8 +30,8 @@ public class MCStatsCommand extends Command {
 
 	private static final Logger LOG = Logger.getLogger(MCStatsCommand.class.getName());
 
-	public MCStatsCommand() {
-		super("stats");
+	public MCStatsCommand(final CommandManager manager) {
+		super(manager, "stats");
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class MCStatsCommand extends Command {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			receiver.sendMessage(Codes.RED + "Outputs MCStats informations with !stats <name>");
+			receiver.sendMessage(Codes.RED + "Outputs MCStats informations with " + this + " <name>");
 			return;
 		}
 

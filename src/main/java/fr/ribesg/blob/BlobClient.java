@@ -9,6 +9,7 @@ import fr.ribesg.blob.command.minecraft.bukkitdev.AuthorCommand;
 import fr.ribesg.blob.command.minecraft.bukkitdev.PluginCommand;
 import fr.ribesg.blob.command.minecraft.mcstats.GlobalMCStatsCommand;
 import fr.ribesg.blob.command.minecraft.mcstats.MCStatsCommand;
+import fr.ribesg.blob.command.util.ShortenCommand;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,16 +41,19 @@ public class BlobClient extends Client {
 
 		this.createCommandManager("+", admins);
 
-		final CommandManager cmdManager = getCommandManager();
+		final CommandManager manager = getCommandManager();
 
 		// Minecraft
-		cmdManager.registerCommand(new MCStatsCommand());
-		cmdManager.registerCommand(new GlobalMCStatsCommand());
-		cmdManager.registerCommand(new PluginCommand());
-		cmdManager.registerCommand(new AuthorCommand());
+		manager.registerCommand(new MCStatsCommand(manager));
+		manager.registerCommand(new GlobalMCStatsCommand(manager));
+		manager.registerCommand(new PluginCommand(manager));
+		manager.registerCommand(new AuthorCommand(manager));
 
 		// Bot
-		cmdManager.registerCommand(new QuitCommand(this));
+		manager.registerCommand(new QuitCommand(manager, this));
+
+		// Util
+		manager.registerCommand(new ShortenCommand(manager));
 	}
 
 	@Override

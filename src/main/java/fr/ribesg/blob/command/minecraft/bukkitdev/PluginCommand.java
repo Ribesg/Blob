@@ -4,9 +4,11 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
+import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
+import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -19,13 +21,15 @@ import java.util.List;
 
 public class PluginCommand extends Command {
 
+	private static final Logger LOGGER = Logger.getLogger(PluginCommand.class.getName());
+
 	private static final String BUKKITDEV_URL = "http://dev.bukkit.org/bukkit-plugins/";
 	private static final String CURSE_URL     = "http://www.curse.com/bukkit-plugins/minecraft/";
 
 	private SimpleDateFormat dateFormat;
 
-	public PluginCommand() {
-		super("plugin");
+	public PluginCommand(final CommandManager manager) {
+		super(manager, "plugin");
 		this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 	}
 
@@ -34,7 +38,7 @@ public class PluginCommand extends Command {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			receiver.sendMessage(Codes.RED + "Look up a plugin with !plugin <name>");
+			receiver.sendMessage(Codes.RED + "Look up a plugin with " + this + " <name>");
 			return;
 		}
 
@@ -44,7 +48,8 @@ public class PluginCommand extends Command {
 		try {
 			doc = WebUtil.getPage(pluginUrl);
 		} catch (final IOException e) {
-			receiver.sendMessage("Failed to get informations about '" + args[0] + "': " + e.getMessage());
+			receiver.sendMessage("Failed to get informations about '" + args[0] + "'");
+			LOGGER.error("Failed to get page " + pluginUrl, e);
 			return;
 		}
 

@@ -4,14 +4,15 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
+import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.blob.BlobClient;
 
 public class QuitCommand extends Command {
 
 	private final BlobClient client;
 
-	public QuitCommand(final BlobClient client) {
-		super("quit", true, null);
+	public QuitCommand(final CommandManager manager, final BlobClient client) {
+		super(manager, "quit", true, null);
 		this.client = client;
 	}
 

@@ -4,6 +4,7 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
+import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
@@ -34,8 +35,8 @@ public class AuthorCommand extends Command {
 	private SimpleDateFormat dateFormat;
 	private NumberFormat     numberFormat;
 
-	public AuthorCommand() {
-		super("author");
+	public AuthorCommand(final CommandManager manager) {
+		super(manager, "author");
 		this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 		this.numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 	}
@@ -121,10 +122,16 @@ public class AuthorCommand extends Command {
 						plugin.name = link.ownText().trim();
 						final String pluginUrl = CURSE_PLUGIN_URL + link.attr("href").substring(15);
 
-						final Document pluginDocument = WebUtil.getPage(pluginUrl);
-						plugin.lastUpdate = getDate(pluginDocument.select("li.updated").get(0).getElementsByTag("abbr").get(0).attr("data-epoch"));
-						plugin.monthlyDownloadCount = getNbDownloads(pluginDocument.select("li.average-downloads").get(0).ownText());
-						plugin.totalDownloadCount = getNbDownloads(pluginDocument.select("li.downloads").get(0).ownText());
+						try {
+							final Document pluginDocument = WebUtil.getPage(pluginUrl);
+							plugin.lastUpdate = getDate(pluginDocument.select("li.updated").get(0).getElementsByTag("abbr").get(0).attr("data-epoch"));
+							plugin.monthlyDownloadCount = getNbDownloads(pluginDocument.select("li.average-downloads").get(0).ownText());
+							plugin.totalDownloadCount = getNbDownloads(pluginDocument.select("li.downloads").get(0).ownText());
+						} catch (final IOException ex) {
+							plugin.lastUpdate = Codes.RED + "Not found on Curse!" + Codes.RESET;
+							plugin.monthlyDownloadCount = "0";
+							plugin.totalDownloadCount = "0";
+						}
 						plugins.add(plugin);
 					}
 				}
@@ -246,7 +253,7 @@ public class AuthorCommand extends Command {
 	}
 
 	private void sendUsage(final Receiver receiver) {
-		receiver.sendMessage(Codes.RED + "Look up an author with !author <name> [amount]");
+		receiver.sendMessage(Codes.RED + "Look up an author with " + this + " <name> [amount]");
 	}
 
 	private String getNbDownloads(final String downloadsString) {
