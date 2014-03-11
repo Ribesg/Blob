@@ -169,9 +169,9 @@
 						<configuration>
 							<files>
 								<file>
-									<source>${basedir}/target/${finalName}.jar</source>
-									<outputDirectory>${basedir}/target</outputDirectory>
-									<destName>${name}.jar</destName>
+									<source>${project.basedir}/target/${project.build.finalName}.jar</source>
+									<outputDirectory>${project.basedir}/target</outputDirectory>
+									<destName>${project.name}.jar</destName>
 								</file>
 							</files>
 						</configuration>
