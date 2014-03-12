@@ -59,7 +59,7 @@ public class BlobClient extends Client {
 	@Override
 	public void onClientJoinChannel(final Channel channel) {
 		if (channel.getServer().getUrl().contains("esper")) {
-			channel.sendMessage("Hi! This is an Anti-Willie-Banning-Cool-Bots message");
+			channel.sendMessage("Hi! Test 42");
 		}
 	}
 }
