@@ -4,6 +4,8 @@ import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.network.ssl.SSLType;
+import fr.ribesg.blob.command.bot.JoinCommand;
+import fr.ribesg.blob.command.bot.PartCommand;
 import fr.ribesg.blob.command.bot.QuitCommand;
 import fr.ribesg.blob.command.minecraft.bukkitdev.AuthorCommand;
 import fr.ribesg.blob.command.minecraft.bukkitdev.PluginCommand;
@@ -50,6 +52,8 @@ public class BlobClient extends Client {
 		manager.registerCommand(new AuthorCommand(manager));
 
 		// Bot
+		manager.registerCommand(new JoinCommand(manager));
+		manager.registerCommand(new PartCommand(manager));
 		manager.registerCommand(new QuitCommand(manager, this));
 
 		// Util
