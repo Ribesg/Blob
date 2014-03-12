@@ -9,6 +9,7 @@ import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.enums.Codes;
 import fr.ribesg.alix.api.message.IrcPacket;
 
+// TODO Rework this once Alix has appropriate stuff
 public class JoinCommand extends Command {
 
 	public JoinCommand(final CommandManager manager) {

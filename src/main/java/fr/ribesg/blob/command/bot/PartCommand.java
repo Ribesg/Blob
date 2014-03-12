@@ -6,6 +6,7 @@ import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.message.IrcPacket;
 
+// TODO Rework this once Alix has appropriate stuff
 public class PartCommand extends Command {
 
 	public PartCommand(final CommandManager manager) {
