@@ -1,5 +1,4 @@
 package fr.ribesg.blob;
-import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.bot.command.CommandManager;
@@ -26,17 +25,8 @@ public class BlobClient extends Client {
 	protected void load() {
 		// EsperNet
 		final Server esperNet = new Server(this, "irc.esper.net", 6697, SSLType.TRUSTING);
-		//esperNet.addChannel("#alix");
 		esperNet.addChannel("#blob");
-		//esperNet.addChannel("#drtshock");
-		//esperNet.addChannel("#ncube");
-		//esperNet.addChannel("#ribesg");
 		this.getServers().add(esperNet);
-
-		// QuakeNet
-		final Server quakeNet = new Server(this, "irc.quakenet.org", 6667);
-		quakeNet.addChannel("#mtxserv");
-		//this.getServers().add(quakeNet);
 
 		final Set<String> admins = new HashSet<>();
 		admins.add("Ribesg");
@@ -58,12 +48,5 @@ public class BlobClient extends Client {
 
 		// Util
 		manager.registerCommand(new ShortenCommand(manager));
-	}
-
-	@Override
-	public void onClientJoinChannel(final Channel channel) {
-		if (channel.getServer().getUrl().contains("esper")) {
-			channel.sendMessage("Hi! Test 42");
-		}
 	}
 }
