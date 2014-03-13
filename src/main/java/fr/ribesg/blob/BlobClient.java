@@ -3,7 +3,7 @@ import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.bot.command.CommandManager;
-import fr.ribesg.alix.network.ssl.SSLType;
+import fr.ribesg.alix.api.network.ssl.SSLType;
 import fr.ribesg.blob.command.bot.JoinCommand;
 import fr.ribesg.blob.command.bot.PartCommand;
 import fr.ribesg.blob.command.bot.QuitCommand;
