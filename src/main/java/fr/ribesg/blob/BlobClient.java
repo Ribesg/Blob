@@ -17,8 +17,8 @@ import java.util.Set;
 
 public class BlobClient extends Client {
 
-	public BlobClient(final String name) {
-		super(name);
+	public BlobClient() {
+		super("Blob");
 	}
 
 	@Override
