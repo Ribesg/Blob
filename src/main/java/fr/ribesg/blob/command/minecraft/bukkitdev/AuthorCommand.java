@@ -1,5 +1,6 @@
 package fr.ribesg.blob.command.minecraft.bukkitdev;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -8,6 +9,7 @@ import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
+import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -20,13 +22,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class AuthorCommand extends Command {
+
+	private static final Logger LOGGER = Logger.getLogger(AuthorCommand.class.getName());
 
 	private static final String CURSE_PLUGIN_URL      = "http://www.curse.com/bukkit-plugins/minecraft";
 	private static final String BUKKITDEV_URL         = "http://dev.bukkit.org";
@@ -80,6 +88,9 @@ public class AuthorCommand extends Command {
 			}
 
 			final SortedSet<Plugin> plugins = new TreeSet<>();
+
+			final Map<Plugin, Future<Document>> pluginPages = new HashMap<>();
+
 			boolean hasNextPage;
 			final String profilePageLink = BUKKITDEV_PROFILE_URL + userInfo.name;
 			String nextPageLink = profilePageLink + "/bukkit-plugins/";
@@ -122,20 +133,41 @@ public class AuthorCommand extends Command {
 						plugin.name = link.ownText().trim();
 						final String pluginUrl = CURSE_PLUGIN_URL + link.attr("href").substring(15);
 
-						try {
-							final Document pluginDocument = WebUtil.getPage(pluginUrl);
-							plugin.lastUpdate = getDate(pluginDocument.select("li.updated").get(0).getElementsByTag("abbr").get(0).attr("data-epoch"));
-							plugin.monthlyDownloadCount = getNbDownloads(pluginDocument.select("li.average-downloads").get(0).ownText());
-							plugin.totalDownloadCount = getNbDownloads(pluginDocument.select("li.downloads").get(0).ownText());
-						} catch (final IOException ex) {
-							plugin.lastUpdate = Codes.RED + "Not found on Curse!" + Codes.RESET;
-							plugin.monthlyDownloadCount = "0";
-							plugin.totalDownloadCount = "0";
-						}
-						plugins.add(plugin);
+						final Callable<Document> pluginCallable = new Callable<Document>() {
+
+							@Override
+							public Document call() throws Exception {
+								try {
+									return WebUtil.getPage(pluginUrl);
+								} catch (final IOException ex) {
+									return null;
+								}
+							}
+						};
+
+						final Future<Document> pluginFuture = Client.getThreadPool().submit(pluginCallable);
+
+						pluginPages.put(plugin, pluginFuture);
 					}
 				}
 			} while (hasNextPage);
+
+			for (final Map.Entry<Plugin, Future<Document>> entry : pluginPages.entrySet()) {
+				final Plugin plugin = entry.getKey();
+				final Document pluginDocument;
+				try {
+					pluginDocument = entry.getValue().get();
+					plugin.lastUpdate = getDate(pluginDocument.select("li.updated").get(0).getElementsByTag("abbr").get(0).attr("data-epoch"));
+					plugin.monthlyDownloadCount = getNbDownloads(pluginDocument.select("li.average-downloads").get(0).ownText());
+					plugin.totalDownloadCount = getNbDownloads(pluginDocument.select("li.downloads").get(0).ownText());
+				} catch (final Exception e) {
+					LOGGER.error(e);
+					plugin.lastUpdate = Codes.RED + "Not found on Curse!" + Codes.RESET;
+					plugin.monthlyDownloadCount = "0";
+					plugin.totalDownloadCount = "0";
+				}
+				plugins.add(plugin);
+			}
 
 			final Iterator<Plugin> it = plugins.iterator();
 
