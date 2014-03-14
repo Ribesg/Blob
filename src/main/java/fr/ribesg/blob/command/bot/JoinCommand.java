@@ -1,16 +1,16 @@
 package fr.ribesg.blob.command.bot;
-import fr.ribesg.alix.Tools;
 import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
-import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.command.CommandManager;
+import fr.ribesg.alix.api.callback.Callback;
 import fr.ribesg.alix.api.enums.Codes;
+import fr.ribesg.alix.api.enums.Command;
 import fr.ribesg.alix.api.message.IrcPacket;
+import fr.ribesg.alix.api.message.JoinIrcPacket;
 
-// TODO Rework this once Alix has appropriate stuff
-public class JoinCommand extends Command {
+public class JoinCommand extends fr.ribesg.alix.api.bot.command.Command {
 
 	public JoinCommand(final CommandManager manager) {
 		super(manager, "join", true, null);
@@ -34,17 +34,27 @@ public class JoinCommand extends Command {
 						break;
 				}
 			}
+			final boolean finalSilent = silent;
 			for (final String arg : args) {
 				Channel otherChannel = server.getChannel(arg);
 				if (otherChannel == null) {
-					server.send(new IrcPacket(null, fr.ribesg.alix.api.enums.Command.JOIN.name(), null, arg));
-					if (!silent) {
-						Tools.pause(1_000);
-						otherChannel = server.getChannel(arg);
-						if (otherChannel != null) {
-							otherChannel.sendMessage(user.getName() + " told me I should join this channel, hi!");
+					server.send(new JoinIrcPacket(arg), new Callback(5_000, Command.JOIN.name()) {
+
+						@Override
+						public boolean onIrcPacket(final IrcPacket packet) {
+							final String channelName = packet.getParameters().length > 0 ? packet.getParameters()[0] : packet.getTrail();
+							if (channelName.equals(this.originalIrcPacket.getParameters()[0])) {
+								this.server.addChannel(channelName);
+								final Channel channel = this.server.getChannel(channelName);
+								if (!finalSilent) {
+									channel.sendMessage(user.getName() + " told me I should join this channel, hi!");
+								}
+								return true;
+							} else {
+								return false;
+							}
 						}
-					}
+					});
 				} else {
 					receiver.sendMessage(Codes.RED + "I'm already in " + otherChannel.getName() + "!");
 				}

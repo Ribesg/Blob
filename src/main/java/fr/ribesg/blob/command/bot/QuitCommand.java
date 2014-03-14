@@ -1,6 +1,5 @@
 package fr.ribesg.blob.command.bot;
 import fr.ribesg.alix.api.Channel;
-import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
@@ -18,13 +17,9 @@ public class QuitCommand extends Command {
 
 	@Override
 	public void exec(final Server server, final Channel channel, final Source user, final String[] strings) {
-		final Receiver receiver = channel == null ? user : channel;
-
-		receiver.sendMessage("Bye!");
-		for (final Server s : this.client.getServers()) {
-			if (s.hasJoined()) {
-				s.disconnect("Bye!");
-			}
+		for (final Channel c : server.getChannels()) {
+			c.sendMessage("Bye!");
 		}
+		server.disconnect("Bye!");
 	}
 }
