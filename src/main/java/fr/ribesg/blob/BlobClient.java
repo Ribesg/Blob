@@ -33,6 +33,10 @@ public class BlobClient extends Client {
 		esperNet.addChannel("#ribesg");
 		this.getServers().add(esperNet);
 
+		final Server freenode = new Server(this, "chat.freenode.net", 6697, SSLType.TRUSTING);
+		freenode.addChannel("#brainjar");
+		this.getServers().add(freenode);
+
 		final Set<String> admins = new HashSet<>();
 		admins.add("Ribesg");
 
