@@ -3,14 +3,14 @@ import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
+import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.callback.Callback;
 import fr.ribesg.alix.api.enums.Codes;
-import fr.ribesg.alix.api.enums.Command;
 import fr.ribesg.alix.api.message.IrcPacket;
 import fr.ribesg.alix.api.message.JoinIrcPacket;
 
-public class JoinCommand extends fr.ribesg.alix.api.bot.command.Command {
+public class JoinCommand extends Command {
 
 	public JoinCommand(final CommandManager manager) {
 		super(manager, "join", true, null);
@@ -38,7 +38,7 @@ public class JoinCommand extends fr.ribesg.alix.api.bot.command.Command {
 			for (final String arg : args) {
 				Channel otherChannel = server.getChannel(arg);
 				if (otherChannel == null) {
-					server.send(new JoinIrcPacket(arg), new Callback(5_000, Command.JOIN.name()) {
+					server.send(new JoinIrcPacket(arg), new Callback(5_000, "JOIN") {
 
 						@Override
 						public boolean onIrcPacket(final IrcPacket packet) {
