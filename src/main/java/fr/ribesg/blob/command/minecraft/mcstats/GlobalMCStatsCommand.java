@@ -188,26 +188,26 @@ public class GlobalMCStatsCommand extends Command {
 		public String[] getMessages() {
 			final String[] res = new String[4];
 
-			String serversMessage1 = Codes.BOLD + "Servers: " + Codes.RESET;
-			serversMessage1 += "Current: " + Codes.BLUE + Codes.BOLD + this.serversAmount + Codes.RESET;
+			String serversMessage1 = Codes.UNDERLINE + "Servers|" + Codes.RESET;
+			serversMessage1 += " Current: " + Codes.LIGHT_GREEN + Codes.BOLD + this.serversAmount + Codes.RESET;
 			serversMessage1 += " (" + this.serversDiff + ")";
 			res[0] = serversMessage1;
 
-			String serversMessage2 = Codes.BOLD + "Servers: " + Codes.RESET;
-			serversMessage2 += "Min: " + Codes.BLUE + Codes.BOLD + this.serversMin + Codes.RESET;
-			serversMessage2 += " | Max: " + Codes.BLUE + Codes.BOLD + this.serversMax + Codes.RESET;
-			serversMessage2 += " | Average: " + Codes.BLUE + Codes.BOLD + this.serversAvg + Codes.RESET;
+			String serversMessage2 = Codes.UNDERLINE + "Servers|" + Codes.RESET;
+			serversMessage2 += " Min: " + Codes.LIGHT_GREEN + Codes.BOLD + this.serversMin + Codes.RESET;
+			serversMessage2 += " | Max: " + Codes.LIGHT_GREEN + Codes.BOLD + this.serversMax + Codes.RESET;
+			serversMessage2 += " | Average: " + Codes.LIGHT_GREEN + Codes.BOLD + this.serversAvg + Codes.RESET;
 			res[1] = serversMessage2;
 
-			String playersMessage1 = Codes.BOLD + "Players: " + Codes.RESET;
-			playersMessage1 += "Current: " + Codes.BLUE + Codes.BOLD + this.playersAmount + Codes.RESET;
+			String playersMessage1 = Codes.UNDERLINE + "Players|" + Codes.RESET;
+			playersMessage1 += " Current: " + Codes.LIGHT_GREEN + Codes.BOLD + this.playersAmount + Codes.RESET;
 			playersMessage1 += " (" + this.playersDiff + ")";
 			res[2] = playersMessage1;
 
-			String playersMessage2 = Codes.BOLD + "Players: " + Codes.RESET;
-			playersMessage2 += "Min: " + Codes.BLUE + Codes.BOLD + this.playersMin + Codes.RESET;
-			playersMessage2 += " | Max: " + Codes.BLUE + Codes.BOLD + this.playersMax + Codes.RESET;
-			playersMessage2 += " | Average: " + Codes.BLUE + Codes.BOLD + this.playersAvg + Codes.RESET;
+			String playersMessage2 = Codes.UNDERLINE + "Players|" + Codes.RESET;
+			playersMessage2 += " Min: " + Codes.LIGHT_GREEN + Codes.BOLD + this.playersMin + Codes.RESET;
+			playersMessage2 += " | Max: " + Codes.LIGHT_GREEN + Codes.BOLD + this.playersMax + Codes.RESET;
+			playersMessage2 += " | Average: " + Codes.LIGHT_GREEN + Codes.BOLD + this.playersAvg + Codes.RESET;
 			res[3] = playersMessage2;
 
 			return res;

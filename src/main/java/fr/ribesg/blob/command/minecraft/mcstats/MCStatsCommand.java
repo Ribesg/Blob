@@ -63,8 +63,8 @@ public class MCStatsCommand extends Command {
 			}
 
 			messages.add(Codes.BOLD + "MCStats " + Codes.GREEN + stats.name + Codes.RESET + " - Rank: " + Codes.BOLD + stats.rank + Codes.RESET + " (" + colorizeDiff(stats.rankDiff, true) + ") - " + WebUtil.shortenUrl(pluginStatsURL));
-			messages.add(Codes.UNDERLINE + "Servers|" + Codes.RESET + " Now: " + Codes.BOLD + stats.servers + Codes.RESET + " | Diff: " + colorizeDiff(stats.serversDiff, false) + " | Max: " + Codes.BLUE + stats.serversMax + Codes.RESET + " | Month: ~" + Codes.BLUE + stats.serversAverage);
-			messages.add(Codes.UNDERLINE + "Players|" + Codes.RESET + " Now: " + Codes.BOLD + stats.players + Codes.RESET + " | Diff: " + colorizeDiff(stats.playersDiff, false) + " | Max: " + Codes.BLUE + stats.playersMax + Codes.RESET + " | Month: ~" + Codes.BLUE + stats.playersAverage);
+			messages.add(Codes.UNDERLINE + "Servers|" + Codes.RESET + " Now: " + Codes.BOLD + stats.servers + Codes.RESET + " | Diff: " + colorizeDiff(stats.serversDiff, false) + " | Max: " + Codes.LIGHT_GREEN + stats.serversMax + Codes.RESET + " | Month: ~" + Codes.LIGHT_GREEN + stats.serversAverage);
+			messages.add(Codes.UNDERLINE + "Players|" + Codes.RESET + " Now: " + Codes.BOLD + stats.players + Codes.RESET + " | Diff: " + colorizeDiff(stats.playersDiff, false) + " | Max: " + Codes.LIGHT_GREEN + stats.playersMax + Codes.RESET + " | Month: ~" + Codes.LIGHT_GREEN + stats.playersAverage);
 
 			final String authModeJsonString = WebUtil.getString("http://api.mcstats.org/1.0/" + stats.name + "/graph/Auth+Mode");
 			if (!authModeJsonString.contains("NO DATA")) {
