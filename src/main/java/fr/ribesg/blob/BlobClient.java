@@ -78,7 +78,7 @@ public class BlobClient extends Client {
 	@Override
 	public void onClientJoinChannel(final Channel channel) {
 		// Anti-shitty Willie
-		Tools.pause(1_500);
+		Tools.pause(10_000);
 		if (channel.getUsers().contains("Willie")) {
 			channel.sendMessage("Hey " + Codes.RED + "Willie" + Codes.RESET + ", don't kick me, stupid bot, thanks!");
 		}
