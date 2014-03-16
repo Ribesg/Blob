@@ -62,6 +62,7 @@ public class GlobalMCStatsCommand extends Command {
 				switch (args[0].toLowerCase()) {
 					case "auth":
 						receiver.sendMessage(new AuthStats().getMessage());
+						break;
 					default:
 						receiver.sendMessage(Codes.RED + "Invalid argument.");
 						break;
@@ -216,33 +217,38 @@ public class GlobalMCStatsCommand extends Command {
 	// !gstats auth
 	private class AuthStats {
 
-		public final double authOnPercentage;
-		public final double authOffPercentage;
+		public final double left;
+		public final double right;
+
+		private final String offlineModePercentage;
+		private final String onlineModePercentage;
+
+		private String offlineModeAmount;
+		private String onlineModeAmount;
 
 		public AuthStats() throws IOException {
 			final String authUrl = "http://api.mcstats.org/1.0/All+Servers/graph/Auth+Mode";
 			final String jsonString = WebUtil.getString(authUrl);
-			final JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-			final JsonArray data = jsonObject.getAsJsonArray("data");
-			final JsonArray firstArray = data.get(0).getAsJsonArray();
-			final JsonArray secondArray = data.get(1).getAsJsonArray();
-			final String firstArrayString1 = firstArray.get(0).getAsString();
-			final String firstArrayString2 = firstArray.get(1).getAsString();
-			final String secondArrayString2 = secondArray.get(1).getAsString();
+			final JsonObject authModeJson = new JsonParser().parse(jsonString).getAsJsonObject();
+			final JsonArray array = authModeJson.getAsJsonArray("data");
 
-			if (firstArrayString1.contains("Online")) {
-				// First is Online, Second is Offline
-				this.authOnPercentage = Double.parseDouble(firstArrayString2);
-				this.authOffPercentage = Double.parseDouble(secondArrayString2);
-			} else {
-				// First is Offline, Second is Online
-				this.authOffPercentage = Double.parseDouble(firstArrayString2);
-				this.authOnPercentage = Double.parseDouble(secondArrayString2);
-			}
+			final int offlineModeIndex = array.get(0).toString().contains("Online") ? 1 : 0;
+			final int onlineModeIndex = offlineModeIndex == 1 ? 0 : 1;
+
+			offlineModeAmount = array.get(offlineModeIndex).getAsJsonArray().get(0).getAsString().substring(9);
+			offlineModeAmount = offlineModeAmount.substring(0, offlineModeAmount.length() - 1);
+			offlineModePercentage = array.get(offlineModeIndex).getAsJsonArray().get(1).getAsString();
+
+			onlineModeAmount = array.get(onlineModeIndex).getAsJsonArray().get(0).getAsString().substring(8);
+			onlineModeAmount = onlineModeAmount.substring(0, onlineModeAmount.length() - 1);
+			onlineModePercentage = array.get(onlineModeIndex).getAsJsonArray().get(1).getAsString();
+
+			left = Double.parseDouble(onlineModePercentage);
+			right = Double.parseDouble(offlineModePercentage);
 		}
 
 		public String getMessage() {
-			return ArtUtil.asciiBar(this.authOnPercentage, Codes.GREEN, this.authOffPercentage, Codes.RED, 20, '█', '|', Codes.GRAY);
+			return "Auth: " + ArtUtil.asciiBar(left, Codes.GREEN, right, Codes.RED, 20, '█', '|', Codes.GRAY) + " | " + Codes.GREEN + onlineModePercentage + "% (" + onlineModeAmount + ")" + Codes.RESET + " - " + Codes.RED + offlineModePercentage + "% (" + offlineModeAmount + ")";
 		}
 	}
 
