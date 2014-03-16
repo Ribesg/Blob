@@ -41,7 +41,7 @@ public class GlobalMCStatsCommand extends Command {
 	}
 
 	public GlobalMCStatsCommand(final CommandManager manager) {
-		super(manager, "gstats");
+		super(manager, "gstats", new String[] {"[auth] - Look up global Minecraft servers statistics"});
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class GlobalMCStatsCommand extends Command {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 0 && args.length != 1) {
-			nope(channel);
+			sendUsage(receiver);
 			return;
 		}
 
@@ -263,7 +263,4 @@ public class GlobalMCStatsCommand extends Command {
 	 // !gstats software
 
 	 */
-	private void nope(final Channel channel) {
-		channel.sendMessage(Codes.RED + "Global MCStats stats with " + this + " [auth]");
-	}
 }

@@ -33,7 +33,7 @@ public class PluginCommand extends Command {
 	private SimpleDateFormat dateFormat;
 
 	public PluginCommand(final CommandManager manager) {
-		super(manager, "plugin");
+		super(manager, "plugin", new String[] {"<name> - Look up a BukkitDev Plugin"});
 		this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 	}
 
@@ -42,7 +42,7 @@ public class PluginCommand extends Command {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			receiver.sendMessage(Codes.RED + "Look up a plugin with " + this + " <name>");
+			sendUsage(receiver);
 			return;
 		}
 

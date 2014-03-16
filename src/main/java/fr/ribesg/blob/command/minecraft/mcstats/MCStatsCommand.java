@@ -13,7 +13,6 @@ import fr.ribesg.alix.api.bot.util.ArtUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -31,7 +30,7 @@ public class MCStatsCommand extends Command {
 	private static final Logger LOG = Logger.getLogger(MCStatsCommand.class.getName());
 
 	public MCStatsCommand(final CommandManager manager) {
-		super(manager, "stats");
+		super(manager, "stats", new String[] {"<name> - Look up a BukkitDev Plugin statistics from MCStats"});
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class MCStatsCommand extends Command {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			receiver.sendMessage(Codes.RED + "Outputs MCStats informations with " + this + " <name>");
+			sendUsage(receiver);
 			return;
 		}
 
@@ -99,10 +98,6 @@ public class MCStatsCommand extends Command {
 		} catch (final IOException e) {
 			receiver.sendMessage(Codes.RED + "Failed: " + e.getMessage());
 		}
-	}
-
-	private Document parse(final String page) {
-		return Jsoup.parse(page);
 	}
 
 	private static class PluginStats {

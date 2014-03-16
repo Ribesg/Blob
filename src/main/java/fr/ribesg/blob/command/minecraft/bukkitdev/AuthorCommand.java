@@ -44,7 +44,7 @@ public class AuthorCommand extends Command {
 	private NumberFormat     numberFormat;
 
 	public AuthorCommand(final CommandManager manager) {
-		super(manager, "author");
+		super(manager, "author", new String[] {"<name> [amount] - Look up a BukkitDev plugin Author"});
 		this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 		this.numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 	}
@@ -282,10 +282,6 @@ public class AuthorCommand extends Command {
 			info.banReason = doc.select(".warning-message-inner").get(0).child(0).ownText().trim().substring(27);
 		}
 		return info;
-	}
-
-	private void sendUsage(final Receiver receiver) {
-		receiver.sendMessage(Codes.RED + "Look up an author with " + this + " <name> [amount]");
 	}
 
 	private String getNbDownloads(final String downloadsString) {

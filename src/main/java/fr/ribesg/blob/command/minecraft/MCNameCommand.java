@@ -19,7 +19,7 @@ public class MCNameCommand extends Command {
 	private static final Pattern MC_USER_REGEX = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
 
 	public MCNameCommand(final CommandManager manager) {
-		super(manager, "minecraftname", "mcname", "mcn");
+		super(manager, "minecraftname", new String[] {"<name> - Look up a Minecraft username"}, "mcname", "mcn");
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class MCNameCommand extends Command {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			receiver.sendMessage(Codes.RED + "Look up a Minecraft username with " + this + " <name>");
+			sendUsage(receiver);
 			return;
 		}
 
