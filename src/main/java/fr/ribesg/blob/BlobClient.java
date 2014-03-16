@@ -1,7 +1,11 @@
 package fr.ribesg.blob;
+import fr.ribesg.alix.Tools;
+import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.bot.command.CommandManager;
+import fr.ribesg.alix.api.enums.Codes;
+import fr.ribesg.alix.api.message.NickIrcPacket;
 import fr.ribesg.alix.api.network.ssl.SSLType;
 import fr.ribesg.blob.command.bot.JoinCommand;
 import fr.ribesg.blob.command.bot.PartCommand;
@@ -59,5 +63,24 @@ public class BlobClient extends Client {
 
 		// Util
 		manager.registerCommand(new ShortenCommand(manager));
+	}
+
+	@Override
+	public void switchToBackupName() {
+		this.name = this.getName().substring(0, this.getName().length() - 1) + 'o' + this.getName().substring(this.getName().length() - 1);
+		for (final Server server : this.getServers()) {
+			if (server.hasJoined()) {
+				server.send(new NickIrcPacket(this.name));
+			}
+		}
+	}
+
+	@Override
+	public void onClientJoinChannel(final Channel channel) {
+		// Anti-shitty Willie
+		Tools.pause(1_500);
+		if (channel.getUsers().contains("Willie")) {
+			channel.sendMessage("Hey " + Codes.RED + "Willie" + Codes.RESET + ", don't kick me, stupid bot, thanks!");
+		}
 	}
 }
