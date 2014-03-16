@@ -79,7 +79,7 @@ public class BlobClient extends Client {
 	public void onClientJoinChannel(final Channel channel) {
 		// Anti-shitty Willie
 		Tools.pause(10_000);
-		if (channel.getUsers().contains("Willie")) {
+		if (channel.getUserNames().contains("Willie")) {
 			channel.sendMessage("Hey " + Codes.RED + "Willie" + Codes.RESET + ", don't kick me, stupid bot, thanks!");
 		}
 	}
