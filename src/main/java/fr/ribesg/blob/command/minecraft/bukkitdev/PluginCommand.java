@@ -1,5 +1,6 @@
 package fr.ribesg.blob.command.minecraft.bukkitdev;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -18,13 +19,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class PluginCommand extends Command {
 
 	private static final Logger LOGGER = Logger.getLogger(PluginCommand.class.getName());
 
-	private static final String BUKKITDEV_URL = "http://dev.bukkit.org/bukkit-plugins/";
-	private static final String CURSE_URL     = "http://www.curse.com/bukkit-plugins/minecraft/";
+	private static final String BUKKITDEV_URL         = "http://dev.bukkit.org";
+	private static final String BUKKITDEV_PLUGINS_URL = BUKKITDEV_URL + "/bukkit-plugins/";
+	private static final String CURSE_URL             = "http://www.curse.com/bukkit-plugins/minecraft/";
 
 	private SimpleDateFormat dateFormat;
 
@@ -44,6 +48,16 @@ public class PluginCommand extends Command {
 
 		final String pluginUrl = CURSE_URL + args[0].toLowerCase();
 
+		// Get BukkitDev Files page for later use
+		final Future<Document> futureDBODoc = Client.getThreadPool().submit(new Callable<Document>() {
+
+			@Override
+			public Document call() throws Exception {
+				return WebUtil.getPage(BUKKITDEV_PLUGINS_URL + args[0] + "/files/");
+			}
+		});
+
+		// Get Curse page now
 		final Document doc;
 		try {
 			doc = WebUtil.getPage(pluginUrl);
@@ -65,16 +79,16 @@ public class PluginCommand extends Command {
 				authorsList.add(author);
 			}
 		}
-		final StringBuilder builder = new StringBuilder(Codes.BOLD + IrcUtil.preventPing(authorsList.get(0)));
+		final StringBuilder builder = new StringBuilder(Codes.BOLD + Codes.LIGHT_GREEN + IrcUtil.preventPing(authorsList.get(0)));
 		if (authorsList.size() < 6) {
 			for (int i = 1; i < authorsList.size(); i++) {
-				builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(IrcUtil.preventPing(authorsList.get(i)));
+				builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(Codes.LIGHT_GREEN).append(IrcUtil.preventPing(authorsList.get(i)));
 			}
 		} else {
 			for (int i = 1; i < 4; i++) {
-				builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(IrcUtil.preventPing(authorsList.get(i)));
+				builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(Codes.LIGHT_GREEN).append(IrcUtil.preventPing(authorsList.get(i)));
 			}
-			builder.append(Codes.RESET).append(" and ").append(Codes.BOLD).append(authorsList.size() - 4).append(Codes.RESET).append(" others");
+			builder.append(Codes.RESET).append(" and ").append(Codes.BOLD).append(Codes.LIGHT_GREEN).append(authorsList.size() - 4).append(Codes.RESET).append(" others");
 		}
 		final String authors = builder.toString();
 
@@ -96,25 +110,38 @@ public class PluginCommand extends Command {
 		final String latestFileCBVersion = latestFileTr.child(2).ownText();
 		final String latestFileDate = getDate(latestFileTr.child(4).select("abbr.standard-date").get(0).attr("data-epoch"));
 
-		// Short url
+		// Get latest download URL from BukkitDev Files page
+		String latestFileUrl;
+		try {
+			final Document bukkitdevDoc = futureDBODoc.get();
+			latestFileUrl = BUKKITDEV_URL + bukkitdevDoc.select("table.listing > tbody tr.odd td.col-file a").get(0).attr("href");
+		} catch (final Exception e) {
+			latestFileUrl = null;
+		}
+
+		// Shorten the latest File url
+		try {
+			latestFileUrl = WebUtil.shortenUrl(latestFileUrl);
+		} catch (final IOException ignored) {}
+
+		// Shorten the BukkitDev Page url
 		String url;
 		try {
-			url = WebUtil.shortenUrl(BUKKITDEV_URL + args[0]);
+			url = WebUtil.shortenUrl(BUKKITDEV_PLUGINS_URL + args[0]);
 		} catch (final IOException e) {
-			url = BUKKITDEV_URL + args[0];
+			url = BUKKITDEV_PLUGINS_URL + args[0];
 		}
 
 		// Send
 		final String[] messages = {
-				Codes.BOLD + pluginName + Codes.RESET + " - " + Codes.LIGHT_GREEN + url,
+				Codes.BOLD + pluginName + Codes.RESET + " - " + Codes.LIGHT_GREEN + url + (latestFileUrl == null ? "" : (Codes.RESET + " - Latest: " + Codes.LIGHT_BLUE + latestFileUrl)),
 				"- Made by " + authors,
-				"- " + Codes.BOLD + monthlyDownloads + Codes.RESET + " monthly downloads, " +
-				Codes.BOLD + totalDownloads + Codes.RESET + " total downloads",
-				"- Created on " + Codes.BOLD + created + Codes.RESET +
-				", last updated on " + Codes.BOLD + lastUpdated,
-				"- Latest file is " + Codes.BOLD + latestFileName + Codes.RESET + ", a " + Codes.BOLD +
-				latestFileType + Codes.RESET + " build for " + Codes.BOLD + latestFileCBVersion +
-				Codes.RESET + " released on " + Codes.BOLD + latestFileDate
+				"- " + Codes.BOLD + Codes.LIGHT_GREEN + monthlyDownloads + Codes.RESET + " monthly downloads, " +
+				Codes.BOLD + Codes.LIGHT_GREEN + totalDownloads + Codes.RESET + " total downloads",
+				"- Birth: " + Codes.BOLD + Codes.LIGHT_GREEN + created + Codes.RESET + " - Last Update: " + Codes.BOLD + Codes.LIGHT_GREEN + lastUpdated,
+				"- Latest file: " + Codes.BOLD + Codes.LIGHT_GREEN + latestFileName + Codes.RESET + ", a " + Codes.BOLD + Codes.LIGHT_GREEN +
+				latestFileType + Codes.RESET + " for " + Codes.BOLD + Codes.LIGHT_GREEN + latestFileCBVersion +
+				Codes.RESET + " (" + Codes.BOLD + Codes.LIGHT_GREEN + latestFileDate + Codes.RESET + ')'
 		};
 		receiver.sendMessage(messages);
 	}
