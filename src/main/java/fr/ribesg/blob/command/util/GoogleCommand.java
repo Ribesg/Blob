@@ -54,6 +54,13 @@ public class GoogleCommand extends Command {
 		}
 
 		try {
+			WebUtil.getString("http://www.google." + site);
+		} catch (IOException e) {
+			receiver.sendMessage(Codes.RED + user.getName() + ", " + Codes.LIGHT_BLUE + "http://www.google." + site + "/" + Codes.RED + " doesn't seem to be a thing");
+			return;
+		}
+
+		try {
 			final String url = URLEncoder.encode(String.format(GOOGLE_URL, site) + request, "UTF-8");
 			final String message = Codes.LIGHT_GRAY + "Search on google." + Codes.BOLD + site + Codes.RESET + Codes.LIGHT_GRAY + ": " + Codes.LIGHT_GREEN;
 			String shortUrl = url;
