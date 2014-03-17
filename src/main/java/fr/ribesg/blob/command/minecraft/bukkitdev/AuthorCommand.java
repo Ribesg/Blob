@@ -50,7 +50,7 @@ public class AuthorCommand extends Command {
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String[] args) {
+	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1 && args.length != 2) {

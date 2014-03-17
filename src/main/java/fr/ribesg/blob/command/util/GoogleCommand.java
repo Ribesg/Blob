@@ -24,7 +24,7 @@ public class GoogleCommand extends Command {
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String[] args) {
+	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length == 0) {
@@ -32,25 +32,10 @@ public class GoogleCommand extends Command {
 			return;
 		}
 
-		final String site;
+		final String site = primaryArgument == null ? "com" : primaryArgument;
 		final StringBuilder request = new StringBuilder(args[0]);
-		if (args[args.length - 1].startsWith("--")) {
-			if (args.length == 1) {
-				sendUsage(receiver);
-				return;
-			}
-
-			site = args[args.length - 1].substring(2);
-
-			for (int i = 1; i < args.length - 1; i++) {
-				request.append(' ').append(args[i]);
-			}
-		} else {
-			site = "com";
-
-			for (int i = 1; i < args.length; i++) {
-				request.append(args[i]);
-			}
+		for (int i = 1; i < args.length; i++) {
+			request.append(' ').append(args[i]);
 		}
 
 		try {
@@ -62,7 +47,7 @@ public class GoogleCommand extends Command {
 
 		try {
 			final String url = URLEncoder.encode(String.format(GOOGLE_URL, site) + request, "UTF-8");
-			final String message = Codes.LIGHT_GRAY + "Search on google." + Codes.BOLD + site + Codes.RESET + Codes.LIGHT_GRAY + ": " + Codes.LIGHT_GREEN;
+			final String message = Codes.LIGHT_GRAY + '\'' + request + "' on google." + Codes.BOLD + site + Codes.RESET + Codes.LIGHT_GRAY + ": " + Codes.LIGHT_GREEN;
 			String shortUrl = url;
 			try {
 				shortUrl = WebUtil.shortenUrl(url);

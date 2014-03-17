@@ -16,7 +16,7 @@ public class QuitCommand extends Command {
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String[] strings) {
+	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] strings) {
 		for (final Channel c : server.getChannels()) {
 			c.sendMessage("Bye!");
 		}

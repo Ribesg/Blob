@@ -15,7 +15,7 @@ public class PartCommand extends Command {
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String[] args) {
+	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		if (args.length == 0) {
 			channel.sendMessage("Bye!");
 			server.send(new PartIrcPacket(channel.getName()));
