@@ -51,6 +51,8 @@ public class BlobClient extends Client {
 
 		final CommandManager manager = getCommandManager();
 
+		manager.setUnknownCommandMessage(null);
+
 		// Minecraft
 		manager.registerCommand(new MCStatsCommand(manager));
 		manager.registerCommand(new GlobalMCStatsCommand(manager));
