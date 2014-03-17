@@ -11,6 +11,7 @@ import fr.ribesg.blob.command.bot.JoinCommand;
 import fr.ribesg.blob.command.bot.PartCommand;
 import fr.ribesg.blob.command.bot.QuitCommand;
 import fr.ribesg.blob.command.minecraft.MCNameCommand;
+import fr.ribesg.blob.command.minecraft.MCStatusCommand;
 import fr.ribesg.blob.command.minecraft.bukkitdev.AuthorCommand;
 import fr.ribesg.blob.command.minecraft.bukkitdev.PluginCommand;
 import fr.ribesg.blob.command.minecraft.mcstats.GlobalMCStatsCommand;
@@ -56,6 +57,7 @@ public class BlobClient extends Client {
 		manager.registerCommand(new PluginCommand(manager));
 		manager.registerCommand(new AuthorCommand(manager));
 		manager.registerCommand(new MCNameCommand(manager));
+		manager.registerCommand(new MCStatusCommand(manager));
 
 		// Bot
 		manager.registerCommand(new JoinCommand(manager));
