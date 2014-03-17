@@ -6,6 +6,7 @@ import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.WebUtil;
+import fr.ribesg.alix.api.enums.Codes;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -54,11 +55,12 @@ public class GoogleCommand extends Command {
 
 		try {
 			final String url = URLEncoder.encode(String.format(GOOGLE_URL, site) + request, "UTF-8");
+			final String message = Codes.LIGHT_GRAY + "Search on google." + Codes.BOLD + site + Codes.RESET + Codes.LIGHT_GRAY + ": " + Codes.LIGHT_GREEN;
+			String shortUrl = url;
 			try {
-				receiver.sendMessage("Search: " + WebUtil.shortenUrl(url));
-			} catch (final IOException e) {
-				receiver.sendMessage("Search: " + url);
-			}
+				shortUrl = WebUtil.shortenUrl(url);
+			} catch (final IOException ignored) {}
+			receiver.sendMessage(message + shortUrl);
 		} catch (final UnsupportedEncodingException e) {
 			LOGGER.error(e);
 		}
