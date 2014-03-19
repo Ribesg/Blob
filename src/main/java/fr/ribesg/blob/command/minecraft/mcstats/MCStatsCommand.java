@@ -89,9 +89,7 @@ public class MCStatsCommand extends Command {
 				messages.add("Sorry, no auth information :-(");
 			}
 
-			for (final String msg : messages) {
-				receiver.sendMessage(msg);
-			}
+			messages.forEach(receiver::sendMessage);
 		} catch (final FileNotFoundException | MalformedURLException | IndexOutOfBoundsException | NumberFormatException e) {
 			LOG.info("No stats found for plugin " + args[0], e);
 			receiver.sendMessage(Codes.RED + "No stats found for plugin " + args[0]);

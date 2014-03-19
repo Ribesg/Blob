@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 public class PluginCommand extends Command {
@@ -49,13 +48,7 @@ public class PluginCommand extends Command {
 		final String pluginUrl = CURSE_URL + args[0].toLowerCase();
 
 		// Get BukkitDev Files page for later use
-		final Future<Document> futureDBODoc = Client.getThreadPool().submit(new Callable<Document>() {
-
-			@Override
-			public Document call() throws Exception {
-				return WebUtil.getPage(BUKKITDEV_PLUGINS_URL + args[0] + "/files/");
-			}
-		});
+		final Future<Document> futureDBODoc = Client.getThreadPool().submit(() -> WebUtil.getPage(BUKKITDEV_PLUGINS_URL + args[0] + "/files/"));
 
 		// Get Curse page now
 		final Document doc;

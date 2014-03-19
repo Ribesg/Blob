@@ -126,30 +126,24 @@ public class AuthorCommand extends Command {
 
 				// List stuff on this page
 				final Elements pluginsTd = doc.select(".col-project");
-				for (final Element e : pluginsTd) {
-					if ("td".equalsIgnoreCase(e.tagName())) {
-						final Plugin plugin = new Plugin();
-						final Element link = e.select("h2").get(0).select("a").get(0);
-						plugin.name = link.ownText().trim();
-						final String pluginUrl = CURSE_PLUGIN_URL + link.attr("href").substring(15);
+				pluginsTd.stream().filter(e -> "td".equalsIgnoreCase(e.tagName())).forEach(e -> {
+					final Plugin plugin = new Plugin();
+					final Element link = e.select("h2").get(0).select("a").get(0);
+					plugin.name = link.ownText().trim();
+					final String pluginUrl = CURSE_PLUGIN_URL + link.attr("href").substring(15);
 
-						final Callable<Document> pluginCallable = new Callable<Document>() {
+					final Callable<Document> pluginCallable = () -> {
+						try {
+							return WebUtil.getPage(pluginUrl);
+						} catch (final IOException ex) {
+							return null;
+						}
+					};
 
-							@Override
-							public Document call() throws Exception {
-								try {
-									return WebUtil.getPage(pluginUrl);
-								} catch (final IOException ex) {
-									return null;
-								}
-							}
-						};
+					final Future<Document> pluginFuture = Client.getThreadPool().submit(pluginCallable);
 
-						final Future<Document> pluginFuture = Client.getThreadPool().submit(pluginCallable);
-
-						pluginPages.put(plugin, pluginFuture);
-					}
-				}
+					pluginPages.put(plugin, pluginFuture);
+				});
 			} while (hasNextPage);
 
 			for (final Map.Entry<Plugin, Future<Document>> entry : pluginPages.entrySet()) {

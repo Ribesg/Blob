@@ -42,12 +42,15 @@ public class MCNameCommand extends Command {
 		final boolean taken;
 		try {
 			final String result = WebUtil.getString("https://account.minecraft.net/buy/frame/checkName/" + userName).trim();
-			if ("TAKEN".equals(result)) {
-				taken = true;
-			} else if ("OK".equals(result)) {
-				taken = false;
-			} else {
-				throw new Exception("Unknown result: " + result);
+			switch (result) {
+				case "TAKEN":
+					taken = true;
+					break;
+				case "OK":
+					taken = false;
+					break;
+				default:
+					throw new Exception("Unknown result: " + result);
 			}
 		} catch (final Exception e) {
 			LOGGER.error("Failed to get availability", e);
@@ -58,24 +61,30 @@ public class MCNameCommand extends Command {
 			final boolean hasPaid;
 			try {
 				final String result = WebUtil.getString("https://minecraft.net/haspaid.jsp?user=" + userName).trim();
-				if ("true".equals(result)) {
-					hasPaid = true;
-				} else if ("false".equals(result)) {
-					hasPaid = false;
-				} else {
-					throw new Exception("Unknown result: " + result);
+				switch (result) {
+					case "true":
+						hasPaid = true;
+						break;
+					case "false":
+						hasPaid = false;
+						break;
+					default:
+						throw new Exception("Unknown result: " + result);
 				}
 			} catch (final Exception e) {
 				LOGGER.error("Failed to get hasPaid state", e);
 				return;
 			}
 			if (hasPaid) {
-				receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " + Codes.BOLD + Codes.RED + "taken" + Codes.RESET + " and " + Codes.BOLD + Codes.RED + "premium");
+				receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " +
+				                     Codes.BOLD + Codes.RED + "taken" + Codes.RESET + " and " + Codes.BOLD + Codes.RED + "premium");
 			} else {
-				receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " + Codes.BOLD + Codes.RED + "taken" + Codes.RESET + " but " + Codes.BOLD + Codes.YELLOW + "not premium");
+				receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " +
+				                     Codes.BOLD + Codes.RED + "taken" + Codes.RESET + " but " + Codes.BOLD + Codes.YELLOW + "not premium");
 			}
 		} else {
-			receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " + Codes.BOLD + Codes.LIGHT_GREEN + "free");
+			receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " +
+			                     Codes.BOLD + Codes.LIGHT_GREEN + "free");
 		}
 	}
 }

@@ -1,5 +1,4 @@
 package fr.ribesg.blob;
-import fr.ribesg.alix.Tools;
 import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Server;
@@ -74,17 +73,13 @@ public class BlobClient extends Client {
 	@Override
 	public void switchToBackupName() {
 		this.name = this.getName().substring(0, this.getName().length() - 1) + 'o' + this.getName().substring(this.getName().length() - 1);
-		for (final Server server : this.getServers()) {
-			if (server.hasJoined()) {
-				server.send(new NickIrcPacket(this.name));
-			}
-		}
+		this.getServers().stream().filter(Server::hasJoined).forEach(server -> server.send(new NickIrcPacket(this.name)));
 	}
 
 	@Override
 	public void onClientJoinChannel(final Channel channel) {
 		// Anti-shitty Willie
-		Tools.pause(10_000);
+		channel.updateUsers(true);
 		if (channel.getUserNames().contains("Willie")) {
 			channel.sendMessage("Hey " + Codes.RED + "Willie" + Codes.RESET + ", don't kick me, stupid bot, thanks!");
 		}

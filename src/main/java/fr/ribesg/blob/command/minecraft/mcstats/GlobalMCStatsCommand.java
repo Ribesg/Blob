@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.Comparator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -102,13 +101,7 @@ public class GlobalMCStatsCommand extends Command {
 			// Players:
 
 			// Convert the Json map to a reversed Java SortedMap
-			final SortedMap<Long, Long> playersMap = new TreeMap<>(new Comparator<Long>() {
-
-				@Override
-				public int compare(final Long x, final Long y) {
-					return -Long.compare(x, y);
-				}
-			});
+			final SortedMap<Long, Long> playersMap = new TreeMap<>((x, y) -> -Long.compare(x, y));
 			for (final JsonElement a : playersArray) {
 				playersMap.put(a.getAsJsonArray().get(0).getAsLong(), a.getAsJsonArray().get(1).getAsLong());
 			}
@@ -143,13 +136,7 @@ public class GlobalMCStatsCommand extends Command {
 			// Same thing for Servers:
 
 			// Convert the Json map to a reversed Java SortedMap
-			final SortedMap<Long, Long> serversMap = new TreeMap<>(new Comparator<Long>() {
-
-				@Override
-				public int compare(final Long x, final Long y) {
-					return -Long.compare(x, y);
-				}
-			});
+			final SortedMap<Long, Long> serversMap = new TreeMap<>((x, y) -> -Long.compare(x, y));
 			for (final JsonElement a : serversArray) {
 				serversMap.put(a.getAsJsonArray().get(0).getAsLong(), a.getAsJsonArray().get(1).getAsLong());
 			}
@@ -248,7 +235,9 @@ public class GlobalMCStatsCommand extends Command {
 		}
 
 		public String getMessage() {
-			return "Auth: " + ArtUtil.asciiBar(left, Codes.GREEN, right, Codes.RED, 20, '█', '|', Codes.GRAY) + " | " + Codes.GREEN + onlineModePercentage + "% (" + onlineModeAmount + ")" + Codes.RESET + " - " + Codes.RED + offlineModePercentage + "% (" + offlineModeAmount + ")";
+			return "Auth: " + ArtUtil.asciiBar(left, Codes.GREEN, right, Codes.RED, 20, '█', '|', Codes.GRAY) +
+			       " | " + Codes.GREEN + onlineModePercentage + "% (" + onlineModeAmount + ")" + Codes.RESET + " - " +
+			       Codes.RED + offlineModePercentage + "% (" + offlineModeAmount + ")";
 		}
 	}
 
