@@ -84,7 +84,7 @@ public class MCNameCommand extends Command {
 			}
 		} else {
 			receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " +
-			                     Codes.BOLD + Codes.LIGHT_GREEN + "free");
+			                     Codes.BOLD + Codes.LIGHT_GREEN + "available");
 		}
 	}
 }
