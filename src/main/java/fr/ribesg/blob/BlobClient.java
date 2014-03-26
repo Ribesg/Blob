@@ -46,7 +46,7 @@ public class BlobClient extends Client {
 
 		// QuakeNet
 		final Server quakenet = new Server(this, getName(), "euroserv.fr.quakenet.org", 6667, SSLType.NONE);
-		freenode.addChannel("#mtxserv");
+		quakenet.addChannel("#mtxserv");
 		this.getServers().add(quakenet);
 
 		final Set<String> admins = new HashSet<>();
