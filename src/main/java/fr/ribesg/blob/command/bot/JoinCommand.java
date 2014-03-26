@@ -39,7 +39,10 @@ public class JoinCommand extends Command {
 			}
 			final boolean finalSilent = silent;
 			for (final String arg : args) {
-				Channel otherChannel = server.getChannel(arg);
+				if ("-s".equalsIgnoreCase(arg) || "--silent".equals(arg)) {
+					continue;
+				}
+				final Channel otherChannel = server.getChannel(arg);
 				if (otherChannel == null) {
 					server.send(new JoinIrcPacket(arg), new Callback(5_000, "JOIN") {
 

@@ -74,7 +74,12 @@ public class BlobClient extends Client {
 	public void onClientJoinChannel(final Channel channel) {
 		// Anti-shitty Willie
 		Log.debug("DEBUG: Updating users...");
-		channel.updateUsers(true);
+		try {
+			channel.updateUsers(true);
+		} catch (final InterruptedException e) {
+			Log.error("Failed to update users for Chanel " + channel.getName(), e);
+			return;
+		}
 		Log.debug("DEBUG: Users updated!");
 		if (channel.getUserNames().contains("Willie")) {
 			channel.sendMessage("Hey " + Codes.RED + "Willie" + Codes.RESET + ", don't kick me, stupid bot, thanks!");
