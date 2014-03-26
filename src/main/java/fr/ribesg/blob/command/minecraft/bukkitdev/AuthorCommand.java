@@ -10,7 +10,6 @@ import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
-import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -43,7 +42,9 @@ public class AuthorCommand extends Command {
 	private NumberFormat     numberFormat;
 
 	public AuthorCommand(final CommandManager manager) {
-		super(manager, "author", new String[] {" <name> [amount] - Look up a BukkitDev plugin Author"});
+		super(manager, "author", new String[] {
+				"## <name> [amount] - Look up a BukkitDev plugin Author"
+		});
 		this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 		this.numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 	}

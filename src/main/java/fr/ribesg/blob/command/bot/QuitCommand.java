@@ -11,7 +11,9 @@ public class QuitCommand extends Command {
 	private final BlobClient client;
 
 	public QuitCommand(final CommandManager manager, final BlobClient client) {
-		super(manager, "quit", new String[] {" - Ask me to disconnect from this server"}, true, null);
+		super(manager, "quit", new String[] {
+				"## - Ask me to disconnect from this server"
+		}, true, null);
 		this.client = client;
 	}
 

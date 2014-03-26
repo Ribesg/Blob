@@ -13,7 +13,9 @@ import fr.ribesg.alix.api.message.JoinIrcPacket;
 public class JoinCommand extends Command {
 
 	public JoinCommand(final CommandManager manager) {
-		super(manager, "join", new String[] {" <channel[,...]> - Ask me to join a/some channel(s)"}, true, null);
+		super(manager, "join", new String[] {
+				"## <channel[,...]> - Ask me to join a/some channel(s)"
+		}, true, null);
 	}
 
 	@Override

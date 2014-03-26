@@ -10,7 +10,6 @@ import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
-import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -31,7 +30,9 @@ public class PluginCommand extends Command {
 	private SimpleDateFormat dateFormat;
 
 	public PluginCommand(final CommandManager manager) {
-		super(manager, "plugin", new String[] {" <name> - Look up a BukkitDev Plugin"});
+		super(manager, "plugin", new String[] {
+				"## <name> - Look up a BukkitDev Plugin"
+		});
 		this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 	}
 

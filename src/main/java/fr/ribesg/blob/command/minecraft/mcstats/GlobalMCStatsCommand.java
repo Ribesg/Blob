@@ -13,7 +13,6 @@ import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.ArtUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
-import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -39,7 +38,9 @@ public class GlobalMCStatsCommand extends Command {
 	}
 
 	public GlobalMCStatsCommand(final CommandManager manager) {
-		super(manager, "gstats", new String[] {" [auth] - Look up global Minecraft servers statistics"});
+		super(manager, "gstats", new String[] {
+				"## [auth] - Look up global Minecraft servers statistics"
+		});
 	}
 
 	@Override

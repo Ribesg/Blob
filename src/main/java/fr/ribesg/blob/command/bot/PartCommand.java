@@ -4,14 +4,14 @@ import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.command.CommandManager;
-import fr.ribesg.alix.api.callback.Callback;
-import fr.ribesg.alix.api.message.IrcPacket;
 import fr.ribesg.alix.api.message.PartIrcPacket;
 
 public class PartCommand extends Command {
 
 	public PartCommand(final CommandManager manager) {
-		super(manager, "part", new String[] {" [channel[,...]] - Ask me to leave a/some channel(s)"}, true, null);
+		super(manager, "part", new String[] {
+				"## [channel[,...]] - Ask me to leave a/some channel(s)"
+		}, true, null);
 	}
 
 	@Override
