@@ -15,7 +15,8 @@ public class ShortenCommand extends Command {
 
 	public ShortenCommand(final CommandManager manager) {
 		super(manager, "shorten", new String[] {
-				"## <url> - Shorten a url with the http://is.gd/ api"
+				"Shorten a url with the http://is.gd/ api",
+				"Usage: ## <url>"
 		}, "s");
 	}
 

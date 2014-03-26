@@ -19,7 +19,8 @@ public class GoogleCommand extends Command {
 
 	public GoogleCommand(final CommandManager manager) {
 		super(manager, "google", new String[] {
-				"##<.<lang>| ><query> - Link to a Google search of something"
+				"Link to a Google search of something",
+				"Ok this one is tricky: ##<.<lang>| ><query>"
 		}, "g");
 	}
 

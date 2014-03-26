@@ -10,7 +10,8 @@ public class PartCommand extends Command {
 
 	public PartCommand(final CommandManager manager) {
 		super(manager, "part", new String[] {
-				"## [channel[,...]] - Ask me to leave a/some channel(s)"
+				"Ask me to leave a/some channel(s)",
+				"Usage: ## [channel[,...]]"
 		}, true, null);
 	}
 

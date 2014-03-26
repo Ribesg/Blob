@@ -17,7 +17,8 @@ public class MCStatusCommand extends Command {
 
 	public MCStatusCommand(final CommandManager manager) {
 		super(manager, "mcstatus", new String[] {
-				"## - Get the state of the Minecraft services"
+				"Get the state of the Minecraft services",
+				"Hardest Usage Ever: ##"
 		}, "mcs");
 	}
 

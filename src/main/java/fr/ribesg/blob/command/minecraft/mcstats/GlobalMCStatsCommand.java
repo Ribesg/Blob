@@ -39,7 +39,8 @@ public class GlobalMCStatsCommand extends Command {
 
 	public GlobalMCStatsCommand(final CommandManager manager) {
 		super(manager, "gstats", new String[] {
-				"## [auth] - Look up global Minecraft servers statistics"
+				"Look up global Minecraft servers statistics",
+				"Usage: ## [auth]"
 		});
 	}
 

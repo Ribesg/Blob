@@ -18,7 +18,8 @@ public class MCNameCommand extends Command {
 
 	public MCNameCommand(final CommandManager manager) {
 		super(manager, "minecraftname", new String[] {
-				"## <name> - Look up a Minecraft username"
+				"Look up a Minecraft username",
+				"Usage: ## <name>"
 		}, "mcname", "mcn");
 	}
 

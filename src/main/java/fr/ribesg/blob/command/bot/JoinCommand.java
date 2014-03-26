@@ -14,7 +14,8 @@ public class JoinCommand extends Command {
 
 	public JoinCommand(final CommandManager manager) {
 		super(manager, "join", new String[] {
-				"## <channel[,...]> - Ask me to join a/some channel(s)"
+				"Ask me to join a/some channel(s)",
+				"Usage: ## <channel[,...]>"
 		}, true, null);
 	}
 
