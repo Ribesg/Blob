@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -26,8 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MCStatsCommand extends Command {
-
-	private static final Logger LOG = Logger.getLogger(MCStatsCommand.class.getName());
 
 	public MCStatsCommand(final CommandManager manager) {
 		super(manager, "stats", new String[] {" <name> - Look up a BukkitDev Plugin statistics from MCStats"});
@@ -54,7 +53,7 @@ public class MCStatsCommand extends Command {
 				final String globalStatsJsonString = WebUtil.getString("http://api.mcstats.org/1.0/" + stats.name + "/graph/Global+Statistics");
 				stats.getMaxAverage(new JsonParser().parse(globalStatsJsonString).getAsJsonObject());
 			} catch (Exception e) {
-				LOG.error(e.getMessage(), e);
+				Log.error(e.getMessage(), e);
 				stats.serversMax = "?";
 				stats.playersMax = "?";
 				stats.serversAverage = "?";
@@ -91,7 +90,7 @@ public class MCStatsCommand extends Command {
 
 			messages.forEach(receiver::sendMessage);
 		} catch (final FileNotFoundException | MalformedURLException | IndexOutOfBoundsException | NumberFormatException e) {
-			LOG.info("No stats found for plugin " + args[0], e);
+			Log.info("No stats found for plugin " + args[0], e);
 			receiver.sendMessage(Codes.RED + "No stats found for plugin " + args[0]);
 		} catch (final IOException e) {
 			receiver.sendMessage(Codes.RED + "Failed: " + e.getMessage());

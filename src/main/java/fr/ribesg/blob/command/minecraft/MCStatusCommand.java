@@ -2,6 +2,7 @@ package fr.ribesg.blob.command.minecraft;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -12,8 +13,6 @@ import fr.ribesg.alix.api.enums.Codes;
 import org.apache.log4j.Logger;
 
 public class MCStatusCommand extends Command {
-
-	private static final Logger LOGGER = Logger.getLogger(MCStatusCommand.class.getName());
 
 	private static final String XPAW_MCSTATUS_URL = "http://xpaw.ru/mcstatus/status.json";
 
@@ -51,7 +50,7 @@ public class MCStatusCommand extends Command {
 			receiver.sendMessage(message.toString());
 		} catch (final Exception e) {
 			receiver.sendMessage(Codes.RED + "Failed to ping/parse status");
-			LOGGER.error("Failed to ping/parse " + XPAW_MCSTATUS_URL, e);
+			Log.error("Failed to ping/parse " + XPAW_MCSTATUS_URL, e);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package fr.ribesg.blob.command.minecraft;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -8,13 +9,10 @@ import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
-import org.apache.log4j.Logger;
 
 import java.util.regex.Pattern;
 
 public class MCNameCommand extends Command {
-
-	private static final Logger LOGGER = Logger.getLogger(MCNameCommand.class.getName());
 
 	private static final Pattern MC_USER_REGEX = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
 
@@ -53,7 +51,7 @@ public class MCNameCommand extends Command {
 					throw new Exception("Unknown result: " + result);
 			}
 		} catch (final Exception e) {
-			LOGGER.error("Failed to get availability", e);
+			Log.error("Failed to get availability", e);
 			return;
 		}
 
@@ -72,7 +70,7 @@ public class MCNameCommand extends Command {
 						throw new Exception("Unknown result: " + result);
 				}
 			} catch (final Exception e) {
-				LOGGER.error("Failed to get hasPaid state", e);
+				Log.error("Failed to get hasPaid state", e);
 				return;
 			}
 			if (hasPaid) {

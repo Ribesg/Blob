@@ -1,6 +1,7 @@
 package fr.ribesg.blob.command.minecraft.bukkitdev;
 import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -33,8 +34,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 public class AuthorCommand extends Command {
-
-	private static final Logger LOGGER = Logger.getLogger(AuthorCommand.class.getName());
 
 	private static final String CURSE_PLUGIN_URL      = "http://www.curse.com/bukkit-plugins/minecraft";
 	private static final String BUKKITDEV_URL         = "http://dev.bukkit.org";
@@ -155,7 +154,7 @@ public class AuthorCommand extends Command {
 					plugin.monthlyDownloadCount = getNbDownloads(pluginDocument.select("li.average-downloads").get(0).ownText());
 					plugin.totalDownloadCount = getNbDownloads(pluginDocument.select("li.downloads").get(0).ownText());
 				} catch (final Exception e) {
-					LOGGER.error(e);
+					Log.error(e);
 					plugin.lastUpdate = Codes.RED + "Not found on Curse!" + Codes.RESET;
 					plugin.monthlyDownloadCount = "0";
 					plugin.totalDownloadCount = "0";

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -24,8 +25,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class GlobalMCStatsCommand extends Command {
-
-	private static final Logger LOG = Logger.getLogger(GlobalMCStatsCommand.class.getName());
 
 	private static final DecimalFormat formatter;
 
@@ -69,7 +68,7 @@ public class GlobalMCStatsCommand extends Command {
 			}
 		} catch (final FileNotFoundException | MalformedURLException | IndexOutOfBoundsException | NumberFormatException |
 				SocketTimeoutException e) {
-			LOG.error("Could not contact MCStats API / or invalid response received", e);
+			Log.error("Could not contact MCStats API / or invalid response received", e);
 			receiver.sendMessage(Codes.RED + "Could not contact MCStats API / or invalid response received");
 		} catch (final IOException e) {
 			receiver.sendMessage(Codes.RED + "Failed: " + e.getMessage());

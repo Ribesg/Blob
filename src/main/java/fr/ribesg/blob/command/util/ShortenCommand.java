@@ -1,5 +1,6 @@
 package fr.ribesg.blob.command.util;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -7,13 +8,10 @@ import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
 public class ShortenCommand extends Command {
-
-	private static final Logger LOGGER = Logger.getLogger(ShortenCommand.class.getName());
 
 	public ShortenCommand(final CommandManager manager) {
 		super(manager, "shorten", new String[] {" <url> - Shorten a url with the http://is.gd/ api"}, "s");
@@ -34,7 +32,7 @@ public class ShortenCommand extends Command {
 			receiver.sendMessage("Done: " + Codes.LIGHT_GREEN + shortUrl);
 		} catch (final IOException e) {
 			receiver.sendMessage(Codes.RED + "Failed to shorten URL");
-			LOGGER.error("Failed to shorten URL", e);
+			Log.error("Failed to shorten URL", e);
 		}
 	}
 }

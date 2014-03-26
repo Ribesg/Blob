@@ -1,6 +1,7 @@
 package fr.ribesg.blob;
 import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.enums.Codes;
@@ -16,14 +17,11 @@ import fr.ribesg.blob.command.minecraft.mcstats.GlobalMCStatsCommand;
 import fr.ribesg.blob.command.minecraft.mcstats.MCStatsCommand;
 import fr.ribesg.blob.command.util.GoogleCommand;
 import fr.ribesg.blob.command.util.ShortenCommand;
-import org.apache.log4j.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class BlobClient extends Client {
-
-	private static final Logger LOGGER = Logger.getLogger(BlobClient.class.getName());
 
 	public BlobClient() {
 		super("Blob");
@@ -75,9 +73,9 @@ public class BlobClient extends Client {
 	@Override
 	public void onClientJoinChannel(final Channel channel) {
 		// Anti-shitty Willie
-		LOGGER.debug("DEBUG: Updating users...");
+		Log.debug("DEBUG: Updating users...");
 		channel.updateUsers(true);
-		LOGGER.debug("DEBUG: Users updated!");
+		Log.debug("DEBUG: Users updated!");
 		if (channel.getUserNames().contains("Willie")) {
 			channel.sendMessage("Hey " + Codes.RED + "Willie" + Codes.RESET + ", don't kick me, stupid bot, thanks!");
 		}

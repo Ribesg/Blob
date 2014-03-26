@@ -1,5 +1,6 @@
 package fr.ribesg.blob.command.util;
 import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -7,15 +8,12 @@ import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class GoogleCommand extends Command {
-
-	private static final Logger LOGGER = Logger.getLogger(GoogleCommand.class.getName());
 
 	private static final String GOOGLE_URL = "http://www.google.%s/search?q=";
 
@@ -54,7 +52,7 @@ public class GoogleCommand extends Command {
 			} catch (final IOException ignored) {}
 			receiver.sendMessage(message + shortUrl);
 		} catch (final UnsupportedEncodingException e) {
-			LOGGER.error(e);
+			Log.error(e);
 		}
 	}
 }

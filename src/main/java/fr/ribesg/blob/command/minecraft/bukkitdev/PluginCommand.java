@@ -1,6 +1,7 @@
 package fr.ribesg.blob.command.minecraft.bukkitdev;
 import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
+import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
@@ -22,8 +23,6 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 public class PluginCommand extends Command {
-
-	private static final Logger LOGGER = Logger.getLogger(PluginCommand.class.getName());
 
 	private static final String BUKKITDEV_URL         = "http://dev.bukkit.org";
 	private static final String BUKKITDEV_PLUGINS_URL = BUKKITDEV_URL + "/bukkit-plugins/";
@@ -56,7 +55,7 @@ public class PluginCommand extends Command {
 			doc = WebUtil.getPage(pluginUrl);
 		} catch (final IOException e) {
 			receiver.sendMessage("Failed to get informations about '" + args[0] + "'");
-			LOGGER.error("Failed to get page " + pluginUrl, e);
+			Log.error("Failed to get page " + pluginUrl, e);
 			return;
 		}
 
