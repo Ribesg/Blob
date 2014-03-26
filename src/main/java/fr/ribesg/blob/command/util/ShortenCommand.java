@@ -16,7 +16,7 @@ public class ShortenCommand extends Command {
 	private static final Logger LOGGER = Logger.getLogger(ShortenCommand.class.getName());
 
 	public ShortenCommand(final CommandManager manager) {
-		super(manager, "shorten", new String[] {"<url> - Shorten a url with the http://is.gd/ api"}, "s");
+		super(manager, "shorten", new String[] {" <url> - Shorten a url with the http://is.gd/ api"}, "s");
 	}
 
 	@Override

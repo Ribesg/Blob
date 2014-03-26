@@ -20,7 +20,7 @@ public class GoogleCommand extends Command {
 	private static final String GOOGLE_URL = "http://www.google.%s/search?q=";
 
 	public GoogleCommand(final CommandManager manager) {
-		super(manager, "google", new String[] {"<query> - Link to a Google search of something"}, "g");
+		super(manager, "google", new String[] {"<.<lang>| ><query> - Link to a Google search of something"}, "g");
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class MCStatsCommand extends Command {
 	private static final Logger LOG = Logger.getLogger(MCStatsCommand.class.getName());
 
 	public MCStatsCommand(final CommandManager manager) {
-		super(manager, "stats", new String[] {"<name> - Look up a BukkitDev Plugin statistics from MCStats"});
+		super(manager, "stats", new String[] {" <name> - Look up a BukkitDev Plugin statistics from MCStats"});
 	}
 
 	@Override

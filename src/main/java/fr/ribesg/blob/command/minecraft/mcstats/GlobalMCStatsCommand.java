@@ -40,7 +40,7 @@ public class GlobalMCStatsCommand extends Command {
 	}
 
 	public GlobalMCStatsCommand(final CommandManager manager) {
-		super(manager, "gstats", new String[] {"[auth] - Look up global Minecraft servers statistics"});
+		super(manager, "gstats", new String[] {" [auth] - Look up global Minecraft servers statistics"});
 	}
 
 	@Override

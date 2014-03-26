@@ -32,7 +32,7 @@ public class PluginCommand extends Command {
 	private SimpleDateFormat dateFormat;
 
 	public PluginCommand(final CommandManager manager) {
-		super(manager, "plugin", new String[] {"<name> - Look up a BukkitDev Plugin"});
+		super(manager, "plugin", new String[] {" <name> - Look up a BukkitDev Plugin"});
 		this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 	}
 

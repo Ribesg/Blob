@@ -44,7 +44,7 @@ public class AuthorCommand extends Command {
 	private NumberFormat     numberFormat;
 
 	public AuthorCommand(final CommandManager manager) {
-		super(manager, "author", new String[] {"<name> [amount] - Look up a BukkitDev plugin Author"});
+		super(manager, "author", new String[] {" <name> [amount] - Look up a BukkitDev plugin Author"});
 		this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
 		this.numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 	}
