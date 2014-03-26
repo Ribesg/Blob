@@ -31,17 +31,23 @@ public class BlobClient extends Client {
 	protected void load() {
 		// EsperNet
 		final Server esperNet = new Server(this, getName(), "irc.esper.net", 6697, SSLType.TRUSTING);
-//		esperNet.addChannel("#alix");
-//		esperNet.addChannel("#bendemPlugins");
+		esperNet.addChannel("#alix");
+		esperNet.addChannel("#bendemPlugins");
 		esperNet.addChannel("#blob");
-//		esperNet.addChannel("#drtshock");
-//		esperNet.addChannel("#ncube");
-//		esperNet.addChannel("#ribesg");
+		esperNet.addChannel("#drtshock");
+		esperNet.addChannel("#ncube");
+		esperNet.addChannel("#ribesg");
 		this.getServers().add(esperNet);
 
-//		final Server freenode = new Server(this, getName(), "chat.freenode.net", 6697, SSLType.TRUSTING);
-//		freenode.addChannel("#brainjar");
-//		this.getServers().add(freenode);
+		// Freenode
+		final Server freenode = new Server(this, getName(), "chat.freenode.net", 6697, SSLType.TRUSTING);
+		freenode.addChannel("#brainjar");
+		this.getServers().add(freenode);
+
+		// QuakeNet
+		final Server quakenet = new Server(this, getName(), "euroserv.fr.quakenet.org", 6667, SSLType.NONE);
+		freenode.addChannel("#mtxserv");
+		this.getServers().add(quakenet);
 
 		final Set<String> admins = new HashSet<>();
 		admins.add("Ribesg");
@@ -81,7 +87,7 @@ public class BlobClient extends Client {
 			return;
 		}
 		Log.debug("DEBUG: Users updated!");
-		if (channel.getUserNames().contains("Willie")) {
+		if (channel.getUserNicknames().contains("Willie")) {
 			channel.sendMessage("Hey " + Codes.RED + "Willie" + Codes.RESET + ", don't kick me, stupid bot, thanks!");
 		}
 	}
