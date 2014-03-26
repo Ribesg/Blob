@@ -4,7 +4,6 @@ import fr.ribesg.alix.api.Client;
 import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.bot.command.CommandManager;
-import fr.ribesg.alix.api.enums.Codes;
 import fr.ribesg.alix.api.network.ssl.SSLType;
 import fr.ribesg.blob.command.bot.JoinCommand;
 import fr.ribesg.blob.command.bot.PartCommand;
@@ -88,7 +87,7 @@ public class BlobClient extends Client {
 		}
 		Log.debug("DEBUG: Users updated!");
 		if (channel.getUserNicknames().contains("Willie")) {
-			channel.sendMessage("Hey " + Codes.RED + "Willie" + Codes.RESET + ", don't kick me, stupid bot, thanks!");
+			channel.sendMessage("Plop");
 		}
 	}
 }
