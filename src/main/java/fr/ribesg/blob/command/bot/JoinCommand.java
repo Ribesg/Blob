@@ -44,7 +44,6 @@ public class JoinCommand extends Command {
 						public boolean onIrcPacket(final IrcPacket packet) {
 							final String channelName = packet.getParameters().length > 0 ? packet.getParameters()[0] : packet.getTrail();
 							if (channelName.equals(this.originalIrcPacket.getParameters()[0])) {
-								this.server.addChannel(channelName);
 								final Channel channel = this.server.getChannel(channelName);
 								if (!finalSilent) {
 									channel.sendMessage(user.getName() + " told me I should join this channel, hi!");

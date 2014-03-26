@@ -37,19 +37,7 @@ public class PartCommand extends Command {
 					if (!silent) {
 						otherChannel.sendMessage(user.getName() + " told me I should leave this channel, bye!");
 					}
-					server.send(new PartIrcPacket(otherChannel.getName()), new Callback(5_000, "PART") {
-
-						@Override
-						public boolean onIrcPacket(final IrcPacket packet) {
-							final String channelName = packet.getParameters().length > 0 ? packet.getParameters()[0] : packet.getTrail();
-							if (channelName.equals(this.originalIrcPacket.getParameters()[0])) {
-								this.server.removeChannel(channelName);
-								return true;
-							} else {
-								return false;
-							}
-						}
-					});
+					server.send(new PartIrcPacket(otherChannel.getName()));
 				}
 			}
 		}
