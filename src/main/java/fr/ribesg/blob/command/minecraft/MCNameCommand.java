@@ -1,4 +1,7 @@
 package fr.ribesg.blob.command.minecraft;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Log;
 import fr.ribesg.alix.api.Receiver;
@@ -33,7 +36,7 @@ public class MCNameCommand extends Command {
 		}
 
 		final String userName = args[0];
-		final String escapedUserName = IrcUtil.preventPing(userName);
+		String escapedUserName = IrcUtil.preventPing(userName);
 
 		if (!MC_USER_REGEX.matcher(userName).matches()) {
 			receiver.sendMessage(Codes.RED + '"' + userName + "\" is not a valid Minecraft username");
@@ -76,8 +79,30 @@ public class MCNameCommand extends Command {
 				Log.error("Failed to get hasPaid state", e);
 				return;
 			}
+
 			if (hasPaid) {
-				receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " +
+				final String realName;
+				final String uuid;
+				try {
+					final String resultString = WebUtil.getString("https://api.mojang.com/profiles/page/1", "name=" + userName, "agent=minecraft");
+					final JsonObject result = new JsonParser().parse(resultString).getAsJsonObject();
+					final JsonArray profiles = result.getAsJsonArray("profiles");
+					if (profiles.size() > 1) {
+						Log.error("Name '" + userName + "' matches multiple account, not supported yet");
+						return;
+					} else {
+						final JsonObject profile = profiles.get(0).getAsJsonObject();
+						realName = profile.getAsJsonPrimitive("name").getAsString();
+						uuid = profile.getAsJsonPrimitive("id").getAsString();
+					}
+				} catch (final Exception e) {
+					Log.error("Failed to get realName", e);
+					return;
+				}
+
+				escapedUserName = IrcUtil.preventPing(realName);
+
+				receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " (" + Codes.BOLD + uuid + Codes.RESET + ") is " +
 				                     Codes.BOLD + Codes.RED + "taken" + Codes.RESET + " and " + Codes.BOLD + Codes.RED + "premium");
 			} else {
 				receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " +
