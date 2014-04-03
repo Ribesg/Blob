@@ -45,7 +45,7 @@ public class MCNameCommand extends Command {
 
 		final boolean taken;
 		try {
-			final String result = WebUtil.getString("https://account.minecraft.net/buy/frame/checkName/" + userName).trim();
+			final String result = WebUtil.get("https://account.minecraft.net/buy/frame/checkName/" + userName).trim();
 			switch (result) {
 				case "TAKEN":
 					taken = true;
@@ -65,7 +65,7 @@ public class MCNameCommand extends Command {
 		if (taken) {
 			final boolean hasPaid;
 			try {
-				final String result = WebUtil.getString("https://minecraft.net/haspaid.jsp?user=" + userName).trim();
+				final String result = WebUtil.get("https://minecraft.net/haspaid.jsp?user=" + userName).trim();
 				switch (result) {
 					case "true":
 						hasPaid = true;

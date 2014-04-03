@@ -40,7 +40,7 @@ public class GoogleCommand extends Command {
 		}
 
 		try {
-			WebUtil.getString("http://www.google." + site);
+			WebUtil.get("http://www.google." + site);
 		} catch (IOException e) {
 			receiver.sendMessage(Codes.RED + user.getName() + ", " + Codes.LIGHT_BLUE + "http://www.google." + site + "/" + Codes.RED + " doesn't seem to be a thing");
 			return;
