@@ -56,7 +56,7 @@ public class PluginCommand extends Command {
 		try {
 			doc = WebUtil.getPage(pluginUrl);
 		} catch (final IOException e) {
-			receiver.sendMessage("Failed to get informations about '" + args[0] + "'");
+			receiver.sendMessage("Failed to get information about '" + args[0] + "'");
 			Log.error("Failed to get page " + pluginUrl, e);
 			return;
 		}

@@ -82,7 +82,7 @@ public class BlobClient extends Client {
 		try {
 			channel.updateUsers(true);
 		} catch (final InterruptedException e) {
-			Log.error("Failed to update users for Chanel " + channel.getName(), e);
+			Log.error("Failed to update users for Channel " + channel.getName(), e);
 			return;
 		}
 		Log.debug("DEBUG: Users updated!");
