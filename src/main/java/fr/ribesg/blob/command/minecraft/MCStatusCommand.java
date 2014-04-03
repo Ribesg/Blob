@@ -27,7 +27,7 @@ public class MCStatusCommand extends Command {
 		final Receiver receiver = channel == null ? user : channel;
 
 		try {
-			final String jsonString = WebUtil.getString(XPAW_MCSTATUS_URL);
+			final String jsonString = WebUtil.get(XPAW_MCSTATUS_URL);
 
 			final JsonObject json = (JsonObject) new JsonParser().parse(jsonString);
 			final JsonObject report = json.getAsJsonObject("report");

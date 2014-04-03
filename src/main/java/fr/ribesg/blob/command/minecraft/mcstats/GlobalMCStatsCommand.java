@@ -93,7 +93,7 @@ public class GlobalMCStatsCommand extends Command {
 
 		public GlobalStats() throws IOException {
 			final String apiUrl = "http://api.mcstats.org/1.0/All+Servers/graph/Global+Statistics";
-			final String jsonString = WebUtil.getString(apiUrl);
+			final String jsonString = WebUtil.get(apiUrl);
 			final JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
 			final JsonObject data = jsonObject.getAsJsonObject("data");
 			final JsonArray playersArray = data.getAsJsonArray("Players");
@@ -216,7 +216,7 @@ public class GlobalMCStatsCommand extends Command {
 
 		public AuthStats() throws IOException {
 			final String authUrl = "http://api.mcstats.org/1.0/All+Servers/graph/Auth+Mode";
-			final String jsonString = WebUtil.getString(authUrl);
+			final String jsonString = WebUtil.get(authUrl);
 			final JsonObject authModeJson = new JsonParser().parse(jsonString).getAsJsonObject();
 			final JsonArray array = authModeJson.getAsJsonArray("data");
 

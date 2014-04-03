@@ -30,23 +30,23 @@ public class BlobClient extends Client {
 	protected void load() {
 		// EsperNet
 		final Server esperNet = new Server(this, getName(), "irc.esper.net", 6697, SSLType.TRUSTING);
-		esperNet.addChannel("#alix");
-		esperNet.addChannel("#bendemPlugins");
+		//esperNet.addChannel("#alix");
+		//esperNet.addChannel("#bendemPlugins");
 		esperNet.addChannel("#blob");
-		esperNet.addChannel("#drtshock");
-		esperNet.addChannel("#ncube");
-		esperNet.addChannel("#ribesg");
+		//esperNet.addChannel("#drtshock");
+		//esperNet.addChannel("#ncube");
+		//esperNet.addChannel("#ribesg");
 		this.getServers().add(esperNet);
 
 		// Freenode
 		final Server freenode = new Server(this, getName(), "chat.freenode.net", 6697, SSLType.TRUSTING);
 		freenode.addChannel("#brainjar");
-		this.getServers().add(freenode);
+		//this.getServers().add(freenode);
 
 		// QuakeNet
 		final Server quakenet = new Server(this, getName(), "euroserv.fr.quakenet.org", 6667, SSLType.NONE);
 		quakenet.addChannel("#mtxserv");
-		this.getServers().add(quakenet);
+		//this.getServers().add(quakenet);
 
 		final Set<String> admins = new HashSet<>();
 		admins.add("Ribesg");
