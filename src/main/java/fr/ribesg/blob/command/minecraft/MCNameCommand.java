@@ -57,6 +57,7 @@ public class MCNameCommand extends Command {
 					throw new Exception("Unknown result: " + result);
 			}
 		} catch (final Exception e) {
+			receiver.sendMessage(Codes.RED + "Failed to get availability");
 			Log.error("Failed to get availability", e);
 			return;
 		}
@@ -76,13 +77,14 @@ public class MCNameCommand extends Command {
 						throw new Exception("Unknown result: " + result);
 				}
 			} catch (final Exception e) {
+				receiver.sendMessage(Codes.RED + "Failed to get hasPaid state");
 				Log.error("Failed to get hasPaid state", e);
 				return;
 			}
 
 			if (hasPaid) {
-				final String realName;
-				final String uuid;
+				String realName = userName;
+				String uuid = "???";
 				try {
 					final JsonObject data = new JsonObject();
 					data.addProperty("name", userName);
@@ -91,6 +93,7 @@ public class MCNameCommand extends Command {
 					final JsonObject result = new JsonParser().parse(resultString).getAsJsonObject();
 					final JsonArray profiles = result.getAsJsonArray("profiles");
 					if (profiles.size() > 1) {
+						receiver.sendMessage(Codes.RED + "Name '" + userName + "' matches multiple account, not supported yet");
 						Log.error("Name '" + userName + "' matches multiple account, not supported yet");
 						return;
 					} else {
@@ -99,8 +102,8 @@ public class MCNameCommand extends Command {
 						uuid = profile.getAsJsonPrimitive("id").getAsString();
 					}
 				} catch (final Exception e) {
+					receiver.sendMessage(Codes.RED + "Failed to get realName");
 					Log.error("Failed to get realName", e);
-					return;
 				}
 
 				escapedUserName = IrcUtil.preventPing(realName);
