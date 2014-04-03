@@ -97,6 +97,16 @@ public class MCNameCommand extends Command {
 						final JsonObject profile = profiles.get(0).getAsJsonObject();
 						realName = profile.getAsJsonPrimitive("name").getAsString();
 						uuid = profile.getAsJsonPrimitive("id").getAsString();
+						if (uuid.length() != 32) {
+							receiver.sendMessage(Codes.RED + "Incorrect UUID");
+							Log.error("Incorrect UUID: " + uuid);
+						} else {
+							uuid = uuid.substring(0, 8) + '-' +
+							       uuid.substring(8, 12) + '-' +
+							       uuid.substring(12, 16) + '-' +
+							       uuid.substring(16, 20) + '-' +
+							       uuid.substring(20, 32);
+						}
 					}
 				} catch (final Exception e) {
 					receiver.sendMessage(Codes.RED + "Failed to get realName");
