@@ -49,7 +49,7 @@ public class MCStatsCommand extends Command {
 
 			final String mcStatsURL = "http://mcstats.org/plugin/";
 			final String pluginStatsURL = mcStatsURL + args[0];
-			final Document doc = WebUtil.parse(WebUtil.get(pluginStatsURL));
+			final Document doc = WebUtil.parseHtml(WebUtil.get(pluginStatsURL));
 			final PluginStats stats = PluginStats.get(doc);
 
 			try {

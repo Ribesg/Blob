@@ -49,12 +49,12 @@ public class PluginCommand extends Command {
 		final String pluginUrl = CURSE_URL + args[0].toLowerCase();
 
 		// Get BukkitDev Files page for later use
-		final Future<Document> futureDBODoc = Client.getThreadPool().submit(() -> WebUtil.parse(WebUtil.get(BUKKITDEV_PLUGINS_URL + args[0] + "/files/")));
+		final Future<Document> futureDBODoc = Client.getThreadPool().submit(() -> WebUtil.parseHtml(WebUtil.get(BUKKITDEV_PLUGINS_URL + args[0] + "/files/")));
 
 		// Get Curse page now
 		final Document doc;
 		try {
-			doc = WebUtil.parse(WebUtil.get(pluginUrl));
+			doc = WebUtil.parseHtml(WebUtil.get(pluginUrl));
 		} catch (final IOException e) {
 			receiver.sendMessage("Failed to get information about '" + args[0] + "'");
 			Log.error("Failed to get page " + pluginUrl, e);

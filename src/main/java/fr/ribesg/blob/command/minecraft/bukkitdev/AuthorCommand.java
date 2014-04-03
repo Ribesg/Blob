@@ -97,7 +97,7 @@ public class AuthorCommand extends Command {
 			String nextPageLink = profilePageLink + "/bukkit-plugins/";
 			do {
 				// Get the page
-				final Document doc = WebUtil.parse(WebUtil.get(nextPageLink));
+				final Document doc = WebUtil.parseHtml(WebUtil.get(nextPageLink));
 
 				// Check if there is at least one plugin
 				if (doc.select(".listing-none-found").size() > 0) {
@@ -135,7 +135,7 @@ public class AuthorCommand extends Command {
 
 					final Callable<Document> pluginCallable = () -> {
 						try {
-							return WebUtil.parse(WebUtil.get(pluginUrl));
+							return WebUtil.parseHtml(WebUtil.get(pluginUrl));
 						} catch (final IOException ex) {
 							return null;
 						}
@@ -229,7 +229,7 @@ public class AuthorCommand extends Command {
 	}
 
 	private UserInfo getUserInfo(final String bukkitDevUser) throws IOException {
-		final Document doc = WebUtil.parse(WebUtil.get(BUKKITDEV_PROFILE_URL + bukkitDevUser));
+		final Document doc = WebUtil.parseHtml(WebUtil.get(BUKKITDEV_PROFILE_URL + bukkitDevUser));
 		final UserInfo info = new UserInfo();
 
 		// Username

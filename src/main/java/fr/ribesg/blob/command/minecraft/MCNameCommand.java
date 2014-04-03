@@ -86,7 +86,7 @@ public class MCNameCommand extends Command {
 				String realName = userName;
 				String uuid = "???";
 				try {
-					final String resultString = WebUtil.post("https://api.mojang.com/profiles/page/1", String.format("{\"name\":\"%s\",\"agent\":\"minecraft\"}", userName));
+					final String resultString = WebUtil.post("https://api.mojang.com/profiles/page/1", "application/json", String.format("{\"name\":\"%s\",\"agent\":\"minecraft\"}", userName));
 					final JsonObject result = new JsonParser().parse(resultString).getAsJsonObject();
 					final JsonArray profiles = result.getAsJsonArray("profiles");
 					if (profiles.size() > 1) {
