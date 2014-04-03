@@ -89,7 +89,7 @@ public class MCNameCommand extends Command {
 					final JsonObject data = new JsonObject();
 					data.addProperty("name", userName);
 					data.addProperty("agent", "minecraft");
-					final String resultString = WebUtil.getString("https://api.mojang.com/profiles/page/1", data);
+					final String resultString = WebUtil.getString("https://api.mojang.com/profiles/page/1", data.toString());
 					final JsonObject result = new JsonParser().parse(resultString).getAsJsonObject();
 					final JsonArray profiles = result.getAsJsonArray("profiles");
 					if (profiles.size() > 1) {
