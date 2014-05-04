@@ -32,7 +32,6 @@ public class BlobClient extends Client {
 		final Server esperNet = new Server(this, getName(), "irc.esper.net", 6697, SSLType.TRUSTING);
 		esperNet.addChannel("#alix");
 		esperNet.addChannel("#bendemPlugins");
-		esperNet.addChannel("#blob");
 		esperNet.addChannel("#drtshock");
 		esperNet.addChannel("#ncube");
 		esperNet.addChannel("#ribesg");
