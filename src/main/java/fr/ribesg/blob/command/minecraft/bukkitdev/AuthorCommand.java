@@ -165,8 +165,15 @@ public class AuthorCommand extends Command {
 			}
 
 			final Iterator<Plugin> it = plugins.iterator();
+			
+			String shortUrl;
+			try {
+				shortUrl = WebUtil.shortenUrl(profilePageLink);
+			} catch (final IOException e) {
+				shortUrl = profilePageLink;
+			}
 
-			messages.add(Codes.BOLD + IrcUtil.preventPing(userInfo.name) + Codes.RESET + " - " + Codes.BOLD + userInfo.state + Codes.RESET + " (" + Codes.LIGHT_GREEN + WebUtil.shortenUrl(profilePageLink) + Codes.RESET + ")");
+			messages.add(Codes.BOLD + IrcUtil.preventPing(userInfo.name) + Codes.RESET + " - " + Codes.BOLD + userInfo.state + Codes.RESET + " (" + Codes.LIGHT_GREEN + shortUrl + Codes.RESET + ")");
 			messages.add("Reputation: " + Codes.BOLD + userInfo.reputation + Codes.RESET + " | Projects: " + Codes.BOLD + plugins.size() + Codes.RESET + " | Join date: " + Codes.BOLD + userInfo.joined);
 			messages.add("Status: " + Codes.BOLD + userInfo.lastLogin);
 			if (userInfo.state.contains("Banned")) {

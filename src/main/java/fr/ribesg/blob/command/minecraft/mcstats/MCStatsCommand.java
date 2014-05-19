@@ -62,8 +62,14 @@ public class MCStatsCommand extends Command {
 				stats.serversAverage = "?";
 				stats.playersAverage = "?";
 			}
-
-			messages.add(Codes.BOLD + "MCStats " + Codes.GREEN + stats.name + Codes.RESET + " - Rank: " + Codes.BOLD + stats.rank + Codes.RESET + " (" + colorizeDiff(stats.rankDiff, true) + ") - " + WebUtil.shortenUrl(pluginStatsURL));
+			
+			String shortUrl;
+			try {
+				shortUrl = WebUtil.shortenUrl(pluginStatsURL);
+			}catch(final IOException e) {
+				shortUrl = pluginStatsURL;
+			}
+			messages.add(Codes.BOLD + "MCStats " + Codes.GREEN + stats.name + Codes.RESET + " - Rank: " + Codes.BOLD + stats.rank + Codes.RESET + " (" + colorizeDiff(stats.rankDiff, true) + ") - " + shortUrl);
 			messages.add(Codes.UNDERLINE + "Servers|" + Codes.RESET + " Now: " + Codes.BOLD + stats.servers + Codes.RESET + " | Diff: " + colorizeDiff(stats.serversDiff, false) + " | Max: " + Codes.LIGHT_GREEN + stats.serversMax + Codes.RESET + " | Month: ~" + Codes.LIGHT_GREEN + stats.serversAverage);
 			messages.add(Codes.UNDERLINE + "Players|" + Codes.RESET + " Now: " + Codes.BOLD + stats.players + Codes.RESET + " | Diff: " + colorizeDiff(stats.playersDiff, false) + " | Max: " + Codes.LIGHT_GREEN + stats.playersMax + Codes.RESET + " | Month: ~" + Codes.LIGHT_GREEN + stats.playersAverage);
 
