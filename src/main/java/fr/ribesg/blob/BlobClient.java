@@ -34,7 +34,9 @@ public class BlobClient extends Client {
 		esperNet.addChannel("#bendemPlugins");
 		esperNet.addChannel("#drtshock");
 		esperNet.addChannel("#ncube");
+		esperNet.addChannel("#nukkit");
 		esperNet.addChannel("#ribesg");
+		esperNet.addChannel("#ten.java");
 		this.getServers().add(esperNet);
 
 		// Freenode
