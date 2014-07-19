@@ -36,6 +36,7 @@ public class BlobClient extends Client {
 		esperNet.addChannel("#ncube");
 		esperNet.addChannel("#nukkit");
 		esperNet.addChannel("#ribesg");
+		esperNet.addChannel("#statik");
 		esperNet.addChannel("#ten.java");
 		this.getServers().add(esperNet);
 
