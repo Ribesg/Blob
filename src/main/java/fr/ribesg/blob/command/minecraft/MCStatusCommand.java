@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2012-2014 Ribesg - www.ribesg.fr
+ * This file is under GPLv3 -> http://www.gnu.org/licenses/gpl-3.0.txt
+ * Please contact me at ribesg[at]yahoo.fr if you improve this file!
+ */
+
 package fr.ribesg.blob.command.minecraft;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -13,47 +19,47 @@ import fr.ribesg.alix.api.enums.Codes;
 
 public class MCStatusCommand extends Command {
 
-	private static final String XPAW_MCSTATUS_URL = "http://xpaw.ru/mcstatus/status.json";
+   private static final String XPAW_MCSTATUS_URL = "http://xpaw.ru/mcstatus/status.json";
 
-	public MCStatusCommand(final CommandManager manager) {
-		super("mcstatus", new String[] {
-				"Get the state of the Minecraft services",
-				"Hardest Usage Ever: ##"
-		}, "mcs");
-	}
+   public MCStatusCommand(final CommandManager manager) {
+      super("mcstatus", new String[] {
+         "Get the state of the Minecraft services",
+         "Hardest Usage Ever: ##"
+      }, "mcs");
+   }
 
-	@Override
-	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
-		final Receiver receiver = channel == null ? user : channel;
+   @Override
+   public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+      final Receiver receiver = channel == null ? user : channel;
 
-		try {
-			final String jsonString = WebUtil.get(XPAW_MCSTATUS_URL);
+      try {
+         final String jsonString = WebUtil.get(XPAW_MCSTATUS_URL);
 
-			final JsonObject json = (JsonObject) new JsonParser().parse(jsonString);
-			final JsonObject report = json.getAsJsonObject("report");
+         final JsonObject json = (JsonObject) new JsonParser().parse(jsonString);
+         final JsonObject report = json.getAsJsonObject("report");
 
-			final boolean login = "up".equals(report.getAsJsonObject("login").getAsJsonPrimitive("status").getAsString());
-			final boolean session = "up".equals(report.getAsJsonObject("session").getAsJsonPrimitive("status").getAsString());
-			final boolean website = "up".equals(report.getAsJsonObject("website").getAsJsonPrimitive("status").getAsString());
-			final boolean skins = "up".equals(report.getAsJsonObject("skins").getAsJsonPrimitive("status").getAsString());
-			final boolean realms = "up".equals(report.getAsJsonObject("realms").getAsJsonPrimitive("status").getAsString());
+         final boolean login = "up".equals(report.getAsJsonObject("login").getAsJsonPrimitive("status").getAsString());
+         final boolean session = "up".equals(report.getAsJsonObject("session").getAsJsonPrimitive("status").getAsString());
+         final boolean website = "up".equals(report.getAsJsonObject("website").getAsJsonPrimitive("status").getAsString());
+         final boolean skins = "up".equals(report.getAsJsonObject("skins").getAsJsonPrimitive("status").getAsString());
+         final boolean realms = "up".equals(report.getAsJsonObject("realms").getAsJsonPrimitive("status").getAsString());
 
-			final StringBuilder message = new StringBuilder();
-			message.append(login ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Login");
-			message.append(Codes.RESET).append(Codes.LIGHT_GRAY).append(" - ");
-			message.append(session ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Session");
-			message.append(Codes.RESET).append(Codes.LIGHT_GRAY).append(" - ");
-			message.append(website ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Website");
-			message.append(Codes.RESET).append(Codes.LIGHT_GRAY).append(" - ");
-			message.append(skins ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Skins");
-			message.append(Codes.RESET).append(Codes.LIGHT_GRAY).append(" - ");
-			message.append(realms ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Realms");
+         final StringBuilder message = new StringBuilder();
+         message.append(login ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Login");
+         message.append(Codes.RESET).append(Codes.LIGHT_GRAY).append(" - ");
+         message.append(session ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Session");
+         message.append(Codes.RESET).append(Codes.LIGHT_GRAY).append(" - ");
+         message.append(website ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Website");
+         message.append(Codes.RESET).append(Codes.LIGHT_GRAY).append(" - ");
+         message.append(skins ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Skins");
+         message.append(Codes.RESET).append(Codes.LIGHT_GRAY).append(" - ");
+         message.append(realms ? Codes.LIGHT_GREEN : Codes.RED).append(Codes.BOLD).append("Realms");
 
-			receiver.sendMessage(message.toString());
-		} catch (final Exception e) {
-			receiver.sendMessage(Codes.RED + "Failed to ping/parse status");
-			Log.error("Failed to ping/parse " + XPAW_MCSTATUS_URL, e);
-		}
-		return true;
-	}
+         receiver.sendMessage(message.toString());
+      } catch (final Exception e) {
+         receiver.sendMessage(Codes.RED + "Failed to ping/parse status");
+         Log.error("Failed to ping/parse " + XPAW_MCSTATUS_URL, e);
+      }
+      return true;
+   }
 }

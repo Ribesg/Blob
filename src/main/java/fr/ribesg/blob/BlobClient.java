@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2012-2014 Ribesg - www.ribesg.fr
+ * This file is under GPLv3 -> http://www.gnu.org/licenses/gpl-3.0.txt
+ * Please contact me at ribesg[at]yahoo.fr if you improve this file!
+ */
+
 package fr.ribesg.blob;
 import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Client;
@@ -22,65 +28,65 @@ import java.util.Set;
 
 public class BlobClient extends Client {
 
-	public BlobClient() {
-		super("Blob");
-	}
+   public BlobClient() {
+      super("Blob");
+   }
 
-	@Override
-	protected void load() {
-		// EsperNet
-		final Server esperNet = new Server(this, getName(), "irc.esper.net", 6697, SSLType.TRUSTING);
-		esperNet.addChannel("#alix");
-		esperNet.addChannel("#bendemPlugins");
-		esperNet.addChannel("#drtshock");
-		esperNet.addChannel("#ncube");
-		esperNet.addChannel("#nukkit");
-		esperNet.addChannel("#ribesg");
-		esperNet.addChannel("#statik");
-		esperNet.addChannel("#ten.java");
-		this.getServers().add(esperNet);
+   @Override
+   protected void load() {
+      // EsperNet
+      final Server esperNet = new Server(this, getName(), "irc.esper.net", 6697, SSLType.TRUSTING);
+      esperNet.addChannel("#alix");
+      esperNet.addChannel("#bendemPlugins");
+      esperNet.addChannel("#drtshock");
+      esperNet.addChannel("#ncube");
+      esperNet.addChannel("#nukkit");
+      esperNet.addChannel("#ribesg");
+      esperNet.addChannel("#statik");
+      esperNet.addChannel("#ten.java");
+      this.getServers().add(esperNet);
 
-		// QuakeNet
-		final Server quakenet = new Server(this, getName(), "euroserv.fr.quakenet.org", 6667, SSLType.NONE);
-		quakenet.addChannel("#mtxserv");
-		this.getServers().add(quakenet);
+      // QuakeNet
+      final Server quakenet = new Server(this, getName(), "euroserv.fr.quakenet.org", 6667, SSLType.NONE);
+      quakenet.addChannel("#mtxserv");
+      this.getServers().add(quakenet);
 
-		final Set<String> admins = new HashSet<>();
-		admins.add("Ribesg");
+      final Set<String> admins = new HashSet<>();
+      admins.add("Ribesg");
 
-		this.createCommandManager("+", admins);
+      this.createCommandManager("+", admins);
 
-		final CommandManager manager = getCommandManager();
+      final CommandManager manager = getCommandManager();
 
-		manager.setUnknownCommandMessage(null);
+      manager.setUnknownCommandMessage(null);
 
-		// Minecraft
-		manager.registerCommand(new MCStatsCommand(manager));
-		manager.registerCommand(new GlobalMCStatsCommand(manager));
-		manager.registerCommand(new PluginCommand(manager));
-		manager.registerCommand(new AuthorCommand(manager));
-		manager.registerCommand(new MCNameCommand(manager));
-		manager.registerCommand(new MCStatusCommand(manager));
+      // Minecraft
+      manager.registerCommand(new MCStatsCommand(manager));
+      manager.registerCommand(new GlobalMCStatsCommand(manager));
+      manager.registerCommand(new PluginCommand(manager));
+      manager.registerCommand(new AuthorCommand(manager));
+      manager.registerCommand(new MCNameCommand(manager));
+      manager.registerCommand(new MCStatusCommand(manager));
 
-		// Bot
-		manager.registerCommand(new JoinCommand(manager));
-		manager.registerCommand(new PartCommand(manager));
-		manager.registerCommand(new QuitCommand(manager, this));
+      // Bot
+      manager.registerCommand(new JoinCommand(manager));
+      manager.registerCommand(new PartCommand(manager));
+      manager.registerCommand(new QuitCommand(manager, this));
 
-		// Util
-		manager.registerCommand(new ShortenCommand(manager));
-		manager.registerCommand(new GoogleCommand(manager));
-	}
+      // Util
+      manager.registerCommand(new ShortenCommand(manager));
+      manager.registerCommand(new GoogleCommand(manager));
+   }
 
-	@Override
-	public void onClientJoinChannel(final Channel channel) {
-		// Anti-shitty Willie
-		Log.debug("DEBUG: Updating users...");
-		channel.updateUsers(() -> {
-			Log.debug("DEBUG: Users updated!");
-			if (channel.getUserNicknames().contains("Willie")) {
-				channel.sendMessage("Plop");
-			}
-		});
-	}
+   @Override
+   public void onClientJoinChannel(final Channel channel) {
+      // Anti-shitty Willie
+      Log.debug("DEBUG: Updating users...");
+      channel.updateUsers(() -> {
+         Log.debug("DEBUG: Users updated!");
+         if (channel.getUserNicknames().contains("Willie")) {
+            channel.sendMessage("Plop");
+         }
+      });
+   }
 }
