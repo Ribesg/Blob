@@ -60,12 +60,13 @@ public class JoinCommand extends Command {
                         if (!finalSilent) {
                            channel.sendMessage(user.getName() + " told me I should join this channel, hi!");
                         }
+                        this.runAllCallbacks();
                         return true;
                      } else {
                         return false;
                      }
                   }
-               });
+               }.addCallback(() -> receiver.sendMessage(Codes.RED + "I'm in!")));
             } else {
                receiver.sendMessage(Codes.RED + "I'm already in " + otherChannel.getName() + "!");
             }
