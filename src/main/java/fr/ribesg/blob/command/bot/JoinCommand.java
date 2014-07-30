@@ -13,18 +13,18 @@ import fr.ribesg.alix.api.message.JoinIrcPacket;
 public class JoinCommand extends Command {
 
 	public JoinCommand(final CommandManager manager) {
-		super(manager, "join", new String[] {
+		super("join", new String[] {
 				"Ask me to join a/some channel(s)",
 				"Usage: ## <channel[,...]>"
 		}, true, null);
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length < 1) {
-			sendUsage(receiver);
+			return false;
 		} else {
 			boolean silent = false;
 			for (final String arg : args) {
@@ -64,6 +64,7 @@ public class JoinCommand extends Command {
 					receiver.sendMessage(Codes.RED + "I'm already in " + otherChannel.getName() + "!");
 				}
 			}
+			return true;
 		}
 	}
 }

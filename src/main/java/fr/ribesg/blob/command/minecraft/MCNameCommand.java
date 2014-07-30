@@ -20,19 +20,18 @@ public class MCNameCommand extends Command {
 	private static final Pattern MC_USER_REGEX = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
 
 	public MCNameCommand(final CommandManager manager) {
-		super(manager, "minecraftname", new String[] {
+		super("minecraftname", new String[] {
 				"Look up a Minecraft username",
 				"Usage: ## <name>"
 		}, "mcname", "mcn");
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			sendUsage(receiver);
-			return;
+			return false;
 		}
 
 		final String userName = args[0];
@@ -40,7 +39,7 @@ public class MCNameCommand extends Command {
 
 		if (!MC_USER_REGEX.matcher(userName).matches()) {
 			receiver.sendMessage(Codes.RED + '"' + userName + "\" is not a valid Minecraft username");
-			return;
+			return true;
 		}
 
 		final boolean taken;
@@ -59,7 +58,7 @@ public class MCNameCommand extends Command {
 		} catch (final Exception e) {
 			receiver.sendMessage(Codes.RED + "Failed to get availability");
 			Log.error("Failed to get availability", e);
-			return;
+			return true;
 		}
 
 		if (taken) {
@@ -79,7 +78,7 @@ public class MCNameCommand extends Command {
 			} catch (final Exception e) {
 				receiver.sendMessage(Codes.RED + "Failed to get hasPaid state");
 				Log.error("Failed to get hasPaid state", e);
-				return;
+				return true;
 			}
 
 			if (hasPaid) {
@@ -92,7 +91,7 @@ public class MCNameCommand extends Command {
 					if (profiles.size() > 1) {
 						receiver.sendMessage(Codes.RED + "Name '" + userName + "' matches multiple account, not supported yet");
 						Log.error("Name '" + userName + "' matches multiple account, not supported yet");
-						return;
+						return true;
 					} else {
 						final JsonObject profile = profiles.get(0).getAsJsonObject();
 						realName = profile.getAsJsonPrimitive("name").getAsString();
@@ -125,5 +124,6 @@ public class MCNameCommand extends Command {
 			receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " +
 			                     Codes.BOLD + Codes.LIGHT_GREEN + "available");
 		}
+		return true;
 	}
 }

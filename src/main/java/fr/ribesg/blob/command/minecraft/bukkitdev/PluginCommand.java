@@ -30,7 +30,7 @@ public class PluginCommand extends Command {
 	private SimpleDateFormat dateFormat;
 
 	public PluginCommand(final CommandManager manager) {
-		super(manager, "plugin", new String[] {
+		super("plugin", new String[] {
 				"Look up a BukkitDev Plugin",
 				"Usage: ## <name>"
 		});
@@ -38,12 +38,11 @@ public class PluginCommand extends Command {
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			sendUsage(receiver);
-			return;
+			return false;
 		}
 
 		final String pluginUrl = CURSE_URL + args[0].toLowerCase();
@@ -58,7 +57,7 @@ public class PluginCommand extends Command {
 		} catch (final IOException e) {
 			receiver.sendMessage("Failed to get information about '" + args[0] + "'");
 			Log.error("Failed to get page " + pluginUrl, e);
-			return;
+			return true;
 		}
 
 		// Plugin name
@@ -138,6 +137,7 @@ public class PluginCommand extends Command {
 				Codes.RESET + " (" + Codes.BOLD + Codes.LIGHT_GREEN + latestFileDate + Codes.RESET + ')'
 		};
 		receiver.sendMessage(messages);
+		return true;
 	}
 
 	private String getNbDownloads(final String downloadsString) {

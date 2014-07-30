@@ -16,14 +16,14 @@ public class MCStatusCommand extends Command {
 	private static final String XPAW_MCSTATUS_URL = "http://xpaw.ru/mcstatus/status.json";
 
 	public MCStatusCommand(final CommandManager manager) {
-		super(manager, "mcstatus", new String[] {
+		super("mcstatus", new String[] {
 				"Get the state of the Minecraft services",
 				"Hardest Usage Ever: ##"
 		}, "mcs");
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		try {
@@ -54,5 +54,6 @@ public class MCStatusCommand extends Command {
 			receiver.sendMessage(Codes.RED + "Failed to ping/parse status");
 			Log.error("Failed to ping/parse " + XPAW_MCSTATUS_URL, e);
 		}
+		return true;
 	}
 }

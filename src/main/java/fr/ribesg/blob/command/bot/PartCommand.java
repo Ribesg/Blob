@@ -9,14 +9,14 @@ import fr.ribesg.alix.api.message.PartIrcPacket;
 public class PartCommand extends Command {
 
 	public PartCommand(final CommandManager manager) {
-		super(manager, "part", new String[] {
+		super("part", new String[] {
 				"Ask me to leave a/some channel(s)",
 				"Usage: ## [channel[,...]]"
 		}, true, null);
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		if (args.length == 0) {
 			channel.sendMessage("Bye!");
 			server.send(new PartIrcPacket(channel.getName()));
@@ -42,5 +42,6 @@ public class PartCommand extends Command {
 				}
 			}
 		}
+		return true;
 	}
 }

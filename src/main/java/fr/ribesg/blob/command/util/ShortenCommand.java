@@ -14,19 +14,18 @@ import java.io.IOException;
 public class ShortenCommand extends Command {
 
 	public ShortenCommand(final CommandManager manager) {
-		super(manager, "shorten", new String[] {
+		super("shorten", new String[] {
 				"Shorten a url with the http://is.gd/ api",
 				"Usage: ## <url>"
 		}, "s");
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			sendUsage(receiver);
-			return;
+			return false;
 		}
 
 		final String url = args[0];
@@ -37,5 +36,6 @@ public class ShortenCommand extends Command {
 			receiver.sendMessage(Codes.RED + "Failed to shorten URL");
 			Log.error("Failed to shorten URL", e);
 		}
+		return true;
 	}
 }

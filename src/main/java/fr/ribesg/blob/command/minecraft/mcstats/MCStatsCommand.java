@@ -13,7 +13,6 @@ import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.ArtUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
-import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -29,19 +28,18 @@ import java.util.List;
 public class MCStatsCommand extends Command {
 
 	public MCStatsCommand(final CommandManager manager) {
-		super(manager, "stats", new String[] {
+		super("stats", new String[] {
 				"Look up a BukkitDev Plugin statistics from MCStats",
 				"Usage: ## <name>"
 		});
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user,final String primaryArgument,  final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1) {
-			sendUsage(receiver);
-			return;
+			return false;
 		}
 
 		try {
@@ -62,11 +60,11 @@ public class MCStatsCommand extends Command {
 				stats.serversAverage = "?";
 				stats.playersAverage = "?";
 			}
-			
+
 			String shortUrl;
 			try {
 				shortUrl = WebUtil.shortenUrl(pluginStatsURL);
-			}catch(final IOException e) {
+			} catch (final IOException e) {
 				shortUrl = pluginStatsURL;
 			}
 			messages.add(Codes.BOLD + "MCStats " + Codes.GREEN + stats.name + Codes.RESET + " - Rank: " + Codes.BOLD + stats.rank + Codes.RESET + " (" + colorizeDiff(stats.rankDiff, true) + ") - " + shortUrl);
@@ -104,6 +102,7 @@ public class MCStatsCommand extends Command {
 		} catch (final IOException e) {
 			receiver.sendMessage(Codes.RED + "Failed: " + e.getMessage());
 		}
+		return true;
 	}
 
 	private static class PluginStats {

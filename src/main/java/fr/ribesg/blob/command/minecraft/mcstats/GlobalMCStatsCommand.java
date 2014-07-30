@@ -38,19 +38,18 @@ public class GlobalMCStatsCommand extends Command {
 	}
 
 	public GlobalMCStatsCommand(final CommandManager manager) {
-		super(manager, "gstats", new String[] {
+		super("gstats", new String[] {
 				"Look up global Minecraft servers statistics",
 				"Usage: ## [auth]"
 		});
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 0 && args.length != 1) {
-			sendUsage(receiver);
-			return;
+			return false;
 		}
 
 		try {
@@ -75,6 +74,7 @@ public class GlobalMCStatsCommand extends Command {
 		} catch (final IOException e) {
 			receiver.sendMessage(Codes.RED + "Failed: " + e.getMessage());
 		}
+		return true;
 	}
 
 	// !gstats

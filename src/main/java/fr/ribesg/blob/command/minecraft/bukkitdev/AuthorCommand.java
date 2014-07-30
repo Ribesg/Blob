@@ -42,7 +42,7 @@ public class AuthorCommand extends Command {
 	private NumberFormat     numberFormat;
 
 	public AuthorCommand(final CommandManager manager) {
-		super(manager, "author", new String[] {
+		super("author", new String[] {
 				"Look up a BukkitDev plugin Author",
 				"Usage: ## <name> [amount]"
 		});
@@ -51,12 +51,11 @@ public class AuthorCommand extends Command {
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length != 1 && args.length != 2) {
-			sendUsage(receiver);
-			return;
+			return false;
 		}
 
 		int amount = 0;
@@ -64,18 +63,17 @@ public class AuthorCommand extends Command {
 			try {
 				amount = Integer.parseInt(args[1]);
 			} catch (final NumberFormatException e) {
-				sendUsage(receiver);
-				return;
+				return false;
 			}
 
 			if (amount < 0) {
-				sendUsage(receiver);
-				return;
+				return false;
 			}
 		}
 
 		final List<String> messages = parsePages(args[0], amount);
 		receiver.sendMessage(messages.toArray(new String[messages.size()]));
+		return true;
 	}
 
 	private List<String> parsePages(final String name, int amount) {
@@ -165,7 +163,7 @@ public class AuthorCommand extends Command {
 			}
 
 			final Iterator<Plugin> it = plugins.iterator();
-			
+
 			String shortUrl;
 			try {
 				shortUrl = WebUtil.shortenUrl(profilePageLink);

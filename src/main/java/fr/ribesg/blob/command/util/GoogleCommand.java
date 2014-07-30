@@ -18,19 +18,18 @@ public class GoogleCommand extends Command {
 	private static final String GOOGLE_URL = "http://www.google.%s/search?q=";
 
 	public GoogleCommand(final CommandManager manager) {
-		super(manager, "google", new String[] {
+		super("google", new String[] {
 				"Link to a Google search of something",
 				"Ok this one is tricky: ##<.<lang>| ><query>"
 		}, "g");
 	}
 
 	@Override
-	public void exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
+	public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
 		final Receiver receiver = channel == null ? user : channel;
 
 		if (args.length == 0) {
-			sendUsage(receiver);
-			return;
+			return false;
 		}
 
 		final String site = primaryArgument == null ? "com" : primaryArgument;
@@ -43,7 +42,7 @@ public class GoogleCommand extends Command {
 			WebUtil.get("http://www.google." + site);
 		} catch (IOException e) {
 			receiver.sendMessage(Codes.RED + user.getName() + ", " + Codes.LIGHT_BLUE + "http://www.google." + site + "/" + Codes.RED + " doesn't seem to be a thing");
-			return;
+			return true;
 		}
 
 		try {
@@ -57,5 +56,6 @@ public class GoogleCommand extends Command {
 		} catch (final UnsupportedEncodingException e) {
 			Log.error(e);
 		}
+		return true;
 	}
 }

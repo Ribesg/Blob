@@ -40,11 +40,6 @@ public class BlobClient extends Client {
 		esperNet.addChannel("#ten.java");
 		this.getServers().add(esperNet);
 
-		// Freenode
-		final Server freenode = new Server(this, getName(), "chat.freenode.net", 6697, SSLType.TRUSTING);
-		freenode.addChannel("#brainjar");
-		this.getServers().add(freenode);
-
 		// QuakeNet
 		final Server quakenet = new Server(this, getName(), "euroserv.fr.quakenet.org", 6667, SSLType.NONE);
 		quakenet.addChannel("#mtxserv");
@@ -81,15 +76,11 @@ public class BlobClient extends Client {
 	public void onClientJoinChannel(final Channel channel) {
 		// Anti-shitty Willie
 		Log.debug("DEBUG: Updating users...");
-		try {
-			channel.updateUsers(true);
-		} catch (final InterruptedException e) {
-			Log.error("Failed to update users for Channel " + channel.getName(), e);
-			return;
-		}
-		Log.debug("DEBUG: Users updated!");
-		if (channel.getUserNicknames().contains("Willie")) {
-			channel.sendMessage("Plop");
-		}
+		channel.updateUsers(() -> {
+			Log.debug("DEBUG: Users updated!");
+			if (channel.getUserNicknames().contains("Willie")) {
+				channel.sendMessage("Plop");
+			}
+		});
 	}
 }
