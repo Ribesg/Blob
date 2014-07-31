@@ -39,6 +39,7 @@ public class BlobClient extends Client {
       esperNet.addChannel("#alix");
       esperNet.addChannel("#bendemPlugins");
       esperNet.addChannel("#drtshock");
+      esperNet.addChannel("#fmdev");
       esperNet.addChannel("#ncube");
       esperNet.addChannel("#nukkit");
       esperNet.addChannel("#ribesg");
