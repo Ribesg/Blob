@@ -53,7 +53,7 @@ public class MCNameCommand extends Command {
          final String resultString = WebUtil.post("https://api.mojang.com/profiles/page/1", "application/json", String.format("{\"name\":\"%s\",\"agent\":\"minecraft\"}", userName));
          final JsonObject result = new JsonParser().parse(resultString).getAsJsonObject();
          final JsonArray profiles = result.getAsJsonArray("profiles");
-         if (profiles.size() < 0) {
+         if (profiles.size() < 1) {
             receiver.sendMessage("The username " + Codes.BOLD + escapedUserName + Codes.RESET + " is " +
                                  Codes.BOLD + Codes.LIGHT_GREEN + "available");
             return true;
