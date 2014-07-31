@@ -21,7 +21,7 @@ public class MCStatusCommand extends Command {
 
    private static final String XPAW_MCSTATUS_URL = "http://xpaw.ru/mcstatus/status.json";
 
-   public MCStatusCommand(final CommandManager manager) {
+   public MCStatusCommand() {
       super("mcstatus", new String[] {
          "Get the state of the Minecraft services",
          "Hardest Usage Ever: ##"

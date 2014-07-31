@@ -47,7 +47,7 @@ public class AuthorCommand extends Command {
    private SimpleDateFormat dateFormat;
    private NumberFormat     numberFormat;
 
-   public AuthorCommand(final CommandManager manager) {
+   public AuthorCommand() {
       super("author", new String[] {
          "Look up a BukkitDev plugin Author",
          "Usage: ## <name> [amount]"

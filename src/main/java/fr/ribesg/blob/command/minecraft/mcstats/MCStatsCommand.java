@@ -33,7 +33,7 @@ import java.util.List;
 
 public class MCStatsCommand extends Command {
 
-   public MCStatsCommand(final CommandManager manager) {
+   public MCStatsCommand() {
       super("stats", new String[] {
          "Look up a BukkitDev Plugin statistics from MCStats",
          "Usage: ## <name>"

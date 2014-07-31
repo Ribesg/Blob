@@ -35,7 +35,7 @@ public class PluginCommand extends Command {
 
    private SimpleDateFormat dateFormat;
 
-   public PluginCommand(final CommandManager manager) {
+   public PluginCommand() {
       super("plugin", new String[] {
          "Look up a BukkitDev Plugin",
          "Usage: ## <name>"

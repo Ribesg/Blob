@@ -43,7 +43,7 @@ public class GlobalMCStatsCommand extends Command {
       formatter.setDecimalFormatSymbols(symbol);
    }
 
-   public GlobalMCStatsCommand(final CommandManager manager) {
+   public GlobalMCStatsCommand() {
       super("gstats", new String[] {
          "Look up global Minecraft servers statistics",
          "Usage: ## [auth]"

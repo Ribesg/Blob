@@ -25,7 +25,7 @@ public class MCNameCommand extends Command {
 
    private static final Pattern MC_USER_REGEX = Pattern.compile("^[a-zA-Z0-9_]{2,16}$");
 
-   public MCNameCommand(final CommandManager manager) {
+   public MCNameCommand() {
       super("minecraftname", new String[] {
          "Look up a Minecraft username",
          "Usage: ## <name>"

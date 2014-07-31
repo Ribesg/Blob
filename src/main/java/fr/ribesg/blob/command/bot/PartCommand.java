@@ -14,7 +14,7 @@ import fr.ribesg.alix.api.message.PartIrcPacket;
 
 public class PartCommand extends Command {
 
-   public PartCommand(final CommandManager manager) {
+   public PartCommand() {
       super("part", new String[] {
          "Ask me to leave a/some channel(s)",
          "Usage: ## [channel[,...]]"

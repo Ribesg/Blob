@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class ShortenCommand extends Command {
 
-   public ShortenCommand(final CommandManager manager) {
+   public ShortenCommand() {
       super("shorten", new String[] {
          "Shorten a url with the http://is.gd/ api",
          "Usage: ## <url>"

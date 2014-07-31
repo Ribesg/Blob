@@ -61,21 +61,21 @@ public class BlobClient extends Client {
       manager.setUnknownCommandMessage(null);
 
       // Minecraft
-      manager.registerCommand(new MCStatsCommand(manager));
-      manager.registerCommand(new GlobalMCStatsCommand(manager));
-      manager.registerCommand(new PluginCommand(manager));
-      manager.registerCommand(new AuthorCommand(manager));
-      manager.registerCommand(new MCNameCommand(manager));
-      manager.registerCommand(new MCStatusCommand(manager));
+      manager.registerCommand(new MCStatsCommand());
+      manager.registerCommand(new GlobalMCStatsCommand());
+      manager.registerCommand(new PluginCommand());
+      manager.registerCommand(new AuthorCommand());
+      manager.registerCommand(new MCNameCommand());
+      manager.registerCommand(new MCStatusCommand());
 
       // Bot
-      manager.registerCommand(new JoinCommand(manager));
-      manager.registerCommand(new PartCommand(manager));
-      manager.registerCommand(new QuitCommand(manager, this));
+      manager.registerCommand(new JoinCommand());
+      manager.registerCommand(new PartCommand());
+      manager.registerCommand(new QuitCommand(this));
 
       // Util
-      manager.registerCommand(new ShortenCommand(manager));
-      manager.registerCommand(new GoogleCommand(manager));
+      manager.registerCommand(new ShortenCommand());
+      manager.registerCommand(new GoogleCommand());
    }
 
    @Override
