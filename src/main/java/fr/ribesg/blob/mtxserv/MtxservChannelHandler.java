@@ -112,7 +112,7 @@ public class MtxservChannelHandler {
       }
    }
 
-   boolean hasAdmin(final Source user) {
+   boolean isAdmin(final Source user) {
       // TODO Check NickServ
       return client.getCommandManager().getBotAdmins().contains(user.getName()) || this.admins.contains(user.getName());
    }

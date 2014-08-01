@@ -50,7 +50,7 @@ public class MtxCommand extends Command {
             return this.adminsSubCommand(receiver, user, channel != null, Arrays.copyOfRange(args, 1, args.length));
          case "enable":
          case "on":
-            if (this.mtxserv.hasAdmin(user)) {
+            if (!this.mtxserv.isAdmin(user)) {
                this.mtxserv.enabled = true;
                receiver.sendMessage((channel != null ? user.getName() + ", a" : "A") + "ctivé!");
             } else {
@@ -59,7 +59,7 @@ public class MtxCommand extends Command {
             return true;
          case "disable":
          case "off":
-            if (this.mtxserv.hasAdmin(user)) {
+            if (!this.mtxserv.isAdmin(user)) {
                this.mtxserv.enabled = false;
                receiver.sendMessage((channel != null ? user.getName() + ", d" : "D") + "ésactivé!");
             } else {
@@ -78,7 +78,7 @@ public class MtxCommand extends Command {
          }
          return true;
       } else if (args.length > 1 && "set".equalsIgnoreCase(args[0])) {
-         if (this.mtxserv.hasAdmin(user)) {
+         if (!this.mtxserv.isAdmin(user)) {
             receiver.sendMessage(Codes.RED + "Nope.");
             return true;
          }
@@ -118,7 +118,7 @@ public class MtxCommand extends Command {
    }
 
    private boolean pingSubCommand(final Receiver receiver, final Source user, final boolean isChannel, final String[] args) {
-      if (this.mtxserv.hasAdmin(user)) {
+      if (!this.mtxserv.isAdmin(user)) {
          receiver.sendMessage(Codes.RED + "Nope.");
          return true;
       }
@@ -175,7 +175,7 @@ public class MtxCommand extends Command {
    }
 
    private boolean adminsSubCommand(final Receiver receiver, final Source user, final boolean isChannel, final String[] args) {
-      if (this.mtxserv.hasAdmin(user)) {
+      if (!this.mtxserv.isAdmin(user)) {
          receiver.sendMessage(Codes.RED + "Nope.");
          return true;
       }
