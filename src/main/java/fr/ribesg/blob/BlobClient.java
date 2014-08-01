@@ -5,11 +5,8 @@
  */
 
 package fr.ribesg.blob;
-import fr.ribesg.alix.api.Channel;
-import fr.ribesg.alix.api.Client;
-import fr.ribesg.alix.api.Log;
-import fr.ribesg.alix.api.Server;
-import fr.ribesg.alix.api.Source;
+
+import fr.ribesg.alix.api.*;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.blob.command.bot.JoinCommand;
 import fr.ribesg.blob.command.bot.NickServCommand;
@@ -26,6 +23,8 @@ import fr.ribesg.blob.command.util.ShortenCommand;
 import fr.ribesg.blob.command.util.UrbanCommand;
 import fr.ribesg.blob.command.util.WolframAlphaCommand;
 import fr.ribesg.blob.config.BlobConfiguration;
+import fr.ribesg.blob.mtxserv.MtxCommand;
+import fr.ribesg.blob.mtxserv.MtxservChannelHandler;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -39,6 +38,8 @@ public class BlobClient extends Client {
    }
 
    private BlobConfiguration config;
+
+   private MtxservChannelHandler mtxserv;
 
    public BlobClient() {
       super("Blob");
@@ -103,6 +104,10 @@ public class BlobClient extends Client {
       manager.registerCommand(new UrbanCommand());
       manager.registerCommand(new WolframAlphaCommand());
 
+      // mTxServ
+      this.mtxserv = new MtxservChannelHandler(this);
+      manager.registerCommand(new MtxCommand(this.mtxserv));
+
       // Logger filter
       Log.info("Adding Logger filters...");
       Log.addFilter(Pattern.quote(this.config.getWolframAlphaAppId()), "**********");
@@ -120,6 +125,7 @@ public class BlobClient extends Client {
          if (channel.getUserNicknames().contains("Willie")) {
             channel.sendMessage("Plop");
          }
+         this.mtxserv.onClientJoinChannel(channel);
       });
    }
 
@@ -129,5 +135,10 @@ public class BlobClient extends Client {
          final Source source = new Source(server, "NickServ", "NickServ", "NickServ@services.esper.net");
          source.sendMessage("IDENTIFY " + this.config.getEsperNetNickServPass());
       }
+   }
+
+   @Override
+   public void onUserJoinChannel(final Source user, final Channel channel) {
+      this.mtxserv.onUserJoinChannel(user, channel);
    }
 }
