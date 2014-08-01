@@ -147,7 +147,7 @@ public class PluginCommand extends Command {
          };
          receiver.sendMessage(messages);
       } else {
-         receiver.sendMessage(Codes.BOLD + pluginName + Codes.RESET + " by " + author + " - " + Codes.LIGHT_GREEN + url + " - DLs (monthly/total): " + Codes.BOLD + monthlyDownloads + Codes.RESET + '/' + Codes.BOLD + totalDownloads);
+         receiver.sendMessage(Codes.BOLD + pluginName + Codes.RESET + " by " + author + Codes.RESET + " - " + Codes.LIGHT_GREEN + url + Codes.RESET + " - DLs (monthly/total): " + Codes.BOLD + monthlyDownloads + Codes.RESET + '/' + Codes.BOLD + totalDownloads);
       }
       return true;
    }

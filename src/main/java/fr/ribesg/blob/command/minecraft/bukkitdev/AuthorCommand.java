@@ -94,7 +94,7 @@ public class AuthorCommand extends Command {
             return messages;
          }
 
-         final Map<Plugin, Future<Document>> pluginPages = new HashMap<>();
+         final Map<String, Future<Plugin>> pluginPages = new HashMap<>();
 
          boolean hasNextPage;
          userInfo.profilePageLink = BUKKITDEV_PROFILE_URL + userInfo.name;
@@ -127,41 +127,48 @@ public class AuthorCommand extends Command {
 
             // List stuff on this page
             final Elements pluginsTd = doc.select(".col-project");
-            pluginsTd.stream().filter(e -> "td".equalsIgnoreCase(e.tagName())).forEach(e -> {
-               final Plugin plugin = new Plugin();
-               final Element link = e.select("h2").get(0).select("a").get(0);
-               plugin.name = link.ownText().trim();
+            pluginsTd.stream().filter(elem -> "td".equalsIgnoreCase(elem.tagName())).forEach(elem -> {
+               final Element link = elem.select("h2").get(0).select("a").get(0);
+               final String pluginName = link.ownText().trim();
                final String pluginUrl = CURSE_PLUGIN_URL + link.attr("href").substring(15);
 
-               final Callable<Document> pluginCallable = () -> {
+               final Callable<Plugin> pluginCallable = () -> {
+                  final Plugin plugin = new Plugin();
                   try {
-                     return WebUtil.parseHtml(WebUtil.get(pluginUrl));
+                     final Document pluginDoc = WebUtil.parseHtml(WebUtil.get(pluginUrl));
+                     try {
+                        plugin.lastUpdate = getDate(pluginDoc.select("li.updated").get(0).getElementsByTag("abbr").get(0).attr("data-epoch"));
+                        plugin.monthlyDownloadCount = getNbDownloads(pluginDoc.select("li.average-downloads").get(0).ownText());
+                        plugin.totalDownloadCount = getNbDownloads(pluginDoc.select("li.downloads").get(0).ownText());
+                     } catch (final Exception e) {
+                        Log.error(e.getMessage(), e);
+                        plugin.lastUpdate = Codes.RED + "Not found on Curse!" + Codes.RESET;
+                        plugin.monthlyDownloadCount = "0";
+                        plugin.totalDownloadCount = "0";
+                     }
+                     try {
+                        plugin.url = WebUtil.shortenUrl(pluginUrl);
+                     } catch (final Throwable t) {
+                        plugin.url = pluginUrl;
+                     }
+                     return plugin;
                   } catch (final IOException ex) {
                      return null;
                   }
                };
 
-               final Future<Document> pluginFuture = Client.getThreadPool().submit(pluginCallable);
+               final Future<Plugin> pluginFuture = Client.getThreadPool().submit(pluginCallable);
 
-               pluginPages.put(plugin, pluginFuture);
+               pluginPages.put(pluginName, pluginFuture);
             });
          } while (hasNextPage);
 
-         for (final Map.Entry<Plugin, Future<Document>> entry : pluginPages.entrySet()) {
-            final Plugin plugin = entry.getKey();
-            final Document pluginDocument;
+         for (final Map.Entry<String, Future<Plugin>> entry : pluginPages.entrySet()) {
             try {
-               pluginDocument = entry.getValue().get();
-               plugin.lastUpdate = getDate(pluginDocument.select("li.updated").get(0).getElementsByTag("abbr").get(0).attr("data-epoch"));
-               plugin.monthlyDownloadCount = getNbDownloads(pluginDocument.select("li.average-downloads").get(0).ownText());
-               plugin.totalDownloadCount = getNbDownloads(pluginDocument.select("li.downloads").get(0).ownText());
-            } catch (final Exception e) {
-               Log.error(e.getMessage(), e);
-               plugin.lastUpdate = Codes.RED + "Not found on Curse!" + Codes.RESET;
-               plugin.monthlyDownloadCount = "0";
-               plugin.totalDownloadCount = "0";
+               userInfo.plugins.add(entry.getValue().get());
+            } catch (final Throwable t) {
+               Log.error(t.getMessage(), t);
             }
-            userInfo.plugins.add(plugin);
          }
 
          printResult(messages, userInfo, mode);
@@ -185,10 +192,10 @@ public class AuthorCommand extends Command {
 
       if (mode == -1) {
          // Oneline mode
-         messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + ']' + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " - DLs (monthly/total): " + Codes.BOLD + userInfo.totalMonthly + Codes.RESET + '/' + Codes.BOLD + userInfo.totalTotal);
+         messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + "] " + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " ( " + shortUrl + ") - " + Codes.GREEN + userInfo.plugins.size() + Codes.RESET + "p - DLs (m/t): " + Codes.BOLD + Codes.LIGHT_GREEN + userInfo.totalMonthly + Codes.RESET + " / " + Codes.BOLD + Codes.LIGHT_GREEN + userInfo.totalTotal + Codes.RESET + " - Now: " + Codes.BOLD + userInfo.lastLogin);
       } else {
-         if (userInfo.plugins.size() == 0) {
-            messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + ']' + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " (" + shortUrl + ") | Reputation: " + userInfo.reputation + " | No Projects");
+         if (userInfo.plugins.isEmpty()) {
+            messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + "] " + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " (" + shortUrl + ") | Reputation: " + userInfo.reputation + " | No Projects");
             messages.add("Join date: " + userInfo.joined + " | Status: " + userInfo.lastLogin);
             if (userInfo.state.contains("Banned")) {
                messages.add("Ban reason: " + userInfo.banReason);
@@ -196,31 +203,25 @@ public class AuthorCommand extends Command {
          } else {
             final Iterator<Plugin> it = userInfo.plugins.iterator();
 
-            messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + ']' + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " (" + Codes.LIGHT_GREEN + shortUrl + Codes.RESET + ")");
-            messages.add("Reputation: " + Codes.BOLD + userInfo.reputation + Codes.RESET + " | Projects: " + Codes.BOLD + userInfo.plugins.size() + Codes.RESET + " | Join date: " + Codes.BOLD + userInfo.joined);
-            messages.add("Status: " + Codes.BOLD + userInfo.lastLogin);
+            messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + ']' + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " (" + Codes.LIGHT_GREEN + shortUrl + Codes.RESET + ") | Reputation: " + Codes.BOLD + userInfo.reputation + Codes.RESET + " | Projects: " + Codes.BOLD + userInfo.plugins.size());
+            messages.add("Join date: " + Codes.BOLD + userInfo.joined + Codes.RESET + " | Status: " + Codes.BOLD + userInfo.lastLogin);
             if (userInfo.state.contains("Banned")) {
                messages.add("Ban reason: " + Codes.BOLD + userInfo.banReason);
             }
-            if (userInfo.plugins.isEmpty()) { // Should not happen
-               messages.add(Codes.RED + "Unknown user or user without plugins");
+            if (mode == 0) {
+               final Plugin plugin = it.next();
+               messages.add("Last updated plugin: " + Codes.BOLD + IrcUtil.preventPing(plugin.name) + Codes.RESET + " on " + plugin.lastUpdate + " (" + Codes.LIGHT_GREEN + plugin.url + Codes.RESET + ")");
             } else {
-               if (mode == 0) {
+               messages.add((mode < userInfo.plugins.size() ? mode : userInfo.plugins.size()) + " last updated plugins:");
+               int i = 0;
+               while (it.hasNext() && i < mode) {
                   final Plugin plugin = it.next();
-                  messages.add("Last updated plugin: " + Codes.BOLD + IrcUtil.preventPing(plugin.name) + Codes.RESET + " (" + plugin.lastUpdate + ")");
-                  messages.add(IrcUtil.preventPing(plugin.name) + " downloads: " + Codes.LIGHT_GREEN + plugin.monthlyDownloadCount + Codes.RESET + " monthly, " + Codes.LIGHT_GREEN + plugin.totalDownloadCount + Codes.RESET + " total");
-               } else {
-                  messages.add((mode < userInfo.plugins.size() ? mode : userInfo.plugins.size()) + " last updated plugins:");
-                  int i = 0;
-                  while (it.hasNext() && i < mode) {
-                     final Plugin plugin = it.next();
-                     messages.add("- " + Codes.BOLD + IrcUtil.preventPing(plugin.name) + Codes.RESET + " (" + plugin.lastUpdate + ")");
-                     messages.add("  | Downloads: " + Codes.LIGHT_GREEN + plugin.monthlyDownloadCount + Codes.RESET + " monthly, " + Codes.LIGHT_GREEN + plugin.totalDownloadCount + Codes.RESET + " total");
-                     i++;
-                  }
+                  messages.add("- " + Codes.BOLD + IrcUtil.preventPing(plugin.name) + Codes.RESET + " (" + plugin.lastUpdate + ")");
+                  messages.add("  | Downloads: " + Codes.LIGHT_GREEN + plugin.monthlyDownloadCount + Codes.RESET + " monthly, " + Codes.LIGHT_GREEN + plugin.totalDownloadCount + Codes.RESET + " total");
+                  i++;
                }
-               messages.add("Total downloads: " + Codes.BOLD + Codes.LIGHT_GREEN + numberFormat.format(userInfo.totalMonthly) + Codes.RESET + " monthly, " + Codes.BOLD + Codes.LIGHT_GREEN + numberFormat.format(userInfo.totalTotal) + Codes.RESET + " total");
             }
+            messages.add("Total downloads: " + Codes.BOLD + Codes.LIGHT_GREEN + numberFormat.format(userInfo.totalMonthly) + Codes.RESET + " monthly, " + Codes.BOLD + Codes.LIGHT_GREEN + numberFormat.format(userInfo.totalTotal) + Codes.RESET + " total");
          }
       }
    }
@@ -231,6 +232,7 @@ public class AuthorCommand extends Command {
       public String lastUpdate;
       public String totalDownloadCount;
       public String monthlyDownloadCount;
+      public String url;
 
       @Override
       public int compareTo(final Plugin o) {
