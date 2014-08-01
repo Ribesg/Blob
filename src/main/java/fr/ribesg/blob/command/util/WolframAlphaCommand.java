@@ -40,7 +40,7 @@ public class WolframAlphaCommand extends Command {
          response = WebUtil.get("http://api.wolframalpha.com/v2/query?input=" + URLEncoder.encode(query, "UTF-8") + "&appid=" + URLEncoder.encode(BlobClient.getConfig().getWolframAlphaAppId(), "UTF-8"));
       } catch (final IOException e) {
          Log.error(e.getMessage(), e);
-         receiver.sendMessage(Codes.RED + user.getName() + ", failed to contact WolframAlpha API!");
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to contact WolframAlpha API!");
          return true;
       }
 
@@ -48,10 +48,10 @@ public class WolframAlphaCommand extends Command {
          final Document xmlDocument = WebUtil.parseXml(response);
          final Element primary = xmlDocument.getElementsByAttributeValue("primary", "true").get(0);
          final String text = primary.getElementsByTag("plaintext").get(0).text();
-         receiver.sendMessage(user.getName() + ", " + text);
+         receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + text);
       } catch (final Throwable t) {
          Log.error("Failed to parse WolframAlpha API response", t);
-         receiver.sendMessage(Codes.RED + user.getName() + ", failed to parse WolframAlpha API response!");
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to parse WolframAlpha API response!");
       }
       return true;
    }

@@ -46,7 +46,7 @@ public class GoogleCommand extends Command {
       try {
          WebUtil.get("http://www.google." + site);
       } catch (IOException e) {
-         receiver.sendMessage(Codes.RED + user.getName() + ", " + Codes.LIGHT_BLUE + "http://www.google." + site + "/" + Codes.RED + " doesn't seem to be a thing");
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + Codes.LIGHT_BLUE + "http://www.google." + site + "/" + Codes.RED + " doesn't seem to be a thing");
          return true;
       }
 
@@ -57,9 +57,9 @@ public class GoogleCommand extends Command {
          try {
             shortUrl = WebUtil.shortenUrl(url);
          } catch (final IOException ignored) {}
-         receiver.sendMessage(message + shortUrl);
+         receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + message + shortUrl);
       } catch (final UnsupportedEncodingException e) {
-         receiver.sendMessage(Codes.RED + user.getName() + ", failed to encode URL!");
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to encode URL!");
          Log.error(e.getMessage(), e);
       }
       return true;

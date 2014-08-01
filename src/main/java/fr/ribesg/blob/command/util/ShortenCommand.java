@@ -11,7 +11,6 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
-import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
 
@@ -37,9 +36,9 @@ public class ShortenCommand extends Command {
       final String url = args[0];
       try {
          final String shortUrl = WebUtil.shortenUrl(url);
-         receiver.sendMessage("Done: " + Codes.LIGHT_GREEN + shortUrl);
+         receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + shortUrl);
       } catch (final IOException e) {
-         receiver.sendMessage(Codes.RED + "Failed to shorten URL");
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to shorten URL");
          Log.error("Failed to shorten URL", e);
       }
       return true;

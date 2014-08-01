@@ -51,7 +51,7 @@ public class UrbanCommand extends Command {
          url = "http://urbanscraper.herokuapp.com/search/" + URLEncoder.encode(query, "UTF-8");
       } catch (final UnsupportedEncodingException e) {
          Log.error(e.getMessage(), e);
-         receiver.sendMessage(Codes.RED + user.getName() + ", failed to encode that thing to a valid URL parameter!");
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to encode that thing to a valid URL parameter!");
          return true;
       }
 
@@ -60,7 +60,7 @@ public class UrbanCommand extends Command {
          response = WebUtil.get(url);
       } catch (final IOException e) {
          Log.error(e.getMessage(), e);
-         receiver.sendMessage(Codes.RED + user.getName() + ", failed to get result from API!");
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to get result from API!");
          return true;
       }
 
@@ -69,7 +69,7 @@ public class UrbanCommand extends Command {
          jsonResponse = new JsonParser().parse(response);
       } catch (final JsonParseException e) {
          Log.error(e.getMessage(), e);
-         receiver.sendMessage(Codes.RED + user.getName() + ", failed to parse response from API!");
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to parse response from API!");
          return true;
       }
 
@@ -77,9 +77,9 @@ public class UrbanCommand extends Command {
          final JsonArray array = jsonResponse.getAsJsonArray();
          final int size = array.size();
          if (size == 0) {
-            receiver.sendMessage(Codes.RED + user.getName() + ", no result.");
+            receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "no result.");
          } else if (definitionNumber > size) {
-            receiver.sendMessage(Codes.RED + user.getName() + ", no such definition number.");
+            receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "no such definition number.");
          } else {
             final JsonElement definitionElement = array.get(definitionNumber - 1);
             if (definitionElement.isJsonObject()) {
@@ -96,13 +96,13 @@ public class UrbanCommand extends Command {
                         Log.error("Failed to shorten URL '" + definitionUrl + "'", e);
                         shortUrl = url;
                      }
-                     receiver.sendMessage(Codes.GREEN + user.getName() + ", " + definitionString + '(' + shortUrl + ')');
+                     receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + definitionString + '(' + shortUrl + ')');
                   } else {
-                     receiver.sendMessage(Codes.GREEN + user.getName() + ", " + definitionString);
+                     receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + ", " + definitionString);
                   }
                } else {
                   Log.error("Malformed response from API!");
-                  receiver.sendMessage(Codes.RED + user.getName() + ", malformed response from API!");
+                  receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "malformed response from API!");
                }
             }
          }
