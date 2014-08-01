@@ -46,32 +46,10 @@ public class BlobClient extends Client {
    @Override
    protected boolean load() {
       BlobClient.instance = this;
-      /*
-      // EsperNet
-      final Server esperNet = new Server(this, getName(), "irc.esper.net", 6697, SSLType.TRUSTING);
-      esperNet.addChannel("#alix");
-      esperNet.addChannel("#bendemPlugins");
-      esperNet.addChannel("#drtshock");
-      esperNet.addChannel("#fmdev");
-      esperNet.addChannel("#ncube");
-      esperNet.addChannel("#nukkit");
-      esperNet.addChannel("#ribesg");
-      esperNet.addChannel("#statik");
-      esperNet.addChannel("#ten.java");
-      this.getServers().add(esperNet);
-
-      // QuakeNet
-      final Server quakenet = new Server(this, getName(), "euroserv.fr.quakenet.org", 6667, SSLType.NONE);
-      quakenet.addChannel("#mtxserv");
-      this.getServers().add(quakenet);
-
-      final Set<String> admins = new HashSet<>();
-      admins.add("Ribesg");
-      */
       Log.info("Loading Configuration file...");
       this.config = new BlobConfiguration();
       try {
-         if (!this.config.load()) {
+         if (!this.config.load(this)) {
             Log.info("New Configuration file created, please edit it and restart Blob.");
             return false;
          }
@@ -86,10 +64,20 @@ public class BlobClient extends Client {
       }
 
       Log.info("Loading Configuration...");
+      this.name = this.config.getMainNick();
       this.getServers().addAll(this.config.getServers());
 
+      Log.info("Configuration loaded! Registered servers:");
+      for (final Server server : this.getServers()) {
+         Log.info("- Server @ " + server.getUrl() + ':' + server.getPort() + ", SSL=" + server.getSslType());
+         Log.info("  With channels:");
+         for (final Channel channel : server.getChannels()) {
+            Log.info("  - " + channel.getName());
+         }
+      }
+
       Log.info("Creating Command Manager...");
-      this.createCommandManager("+", config.getAdmins());
+      this.createCommandManager("+", this.config.getAdmins());
       final CommandManager manager = getCommandManager();
       manager.setUnknownCommandMessage(null);
 
