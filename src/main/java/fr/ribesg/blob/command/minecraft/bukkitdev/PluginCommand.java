@@ -12,7 +12,6 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
-import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
@@ -38,7 +37,7 @@ public class PluginCommand extends Command {
    public PluginCommand() {
       super("plugin", new String[] {
          "Look up a BukkitDev Plugin",
-         "Usage: ## <name>"
+         "Usage: ## <name> [\"more\"]"
       });
       this.dateFormat = new SimpleDateFormat("YYYY-MM-dd");
    }
@@ -47,9 +46,11 @@ public class PluginCommand extends Command {
    public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
       final Receiver receiver = channel == null ? user : channel;
 
-      if (args.length != 1) {
+      if (args.length != 1 && args.length != 2) {
          return false;
       }
+
+      final boolean more = args.length == 2 && "more".equalsIgnoreCase(args[1]);
 
       final String pluginUrl = CURSE_URL + args[0].toLowerCase();
 
@@ -79,6 +80,7 @@ public class PluginCommand extends Command {
          }
       }
       final StringBuilder builder = new StringBuilder(Codes.BOLD + Codes.LIGHT_GREEN + IrcUtil.preventPing(authorsList.get(0)));
+      final String author = builder.toString();
       if (authorsList.size() < 6) {
          for (int i = 1; i < authorsList.size(); i++) {
             builder.append(Codes.RESET).append(", ").append(Codes.BOLD).append(Codes.LIGHT_GREEN).append(IrcUtil.preventPing(authorsList.get(i)));
@@ -132,17 +134,21 @@ public class PluginCommand extends Command {
       }
 
       // Send
-      final String[] messages = {
-         Codes.BOLD + pluginName + Codes.RESET + " - " + Codes.LIGHT_GREEN + url + (latestFileUrl == null ? "" : (Codes.RESET + " - Latest: " + Codes.LIGHT_BLUE + latestFileUrl)),
-         "- Made by " + authors,
-         "- " + Codes.BOLD + Codes.LIGHT_GREEN + monthlyDownloads + Codes.RESET + " monthly downloads, " +
-         Codes.BOLD + Codes.LIGHT_GREEN + totalDownloads + Codes.RESET + " total downloads",
-         "- Birth: " + Codes.BOLD + Codes.LIGHT_GREEN + created + Codes.RESET + " - Last Update: " + Codes.BOLD + Codes.LIGHT_GREEN + lastUpdated,
-         "- Latest file: " + Codes.BOLD + Codes.LIGHT_GREEN + latestFileName + Codes.RESET + ", a " + Codes.BOLD + Codes.LIGHT_GREEN +
-         latestFileType + Codes.RESET + " for " + Codes.BOLD + Codes.LIGHT_GREEN + latestFileCBVersion +
-         Codes.RESET + " (" + Codes.BOLD + Codes.LIGHT_GREEN + latestFileDate + Codes.RESET + ')'
-      };
-      receiver.sendMessage(messages);
+      if (more) {
+         final String[] messages = {
+            Codes.BOLD + pluginName + Codes.RESET + " - " + Codes.LIGHT_GREEN + url + (latestFileUrl == null ? "" : (Codes.RESET + " - Latest: " + Codes.LIGHT_BLUE + latestFileUrl)),
+            "- Made by " + authors,
+            "- " + Codes.BOLD + Codes.LIGHT_GREEN + monthlyDownloads + Codes.RESET + " monthly downloads, " +
+            Codes.BOLD + Codes.LIGHT_GREEN + totalDownloads + Codes.RESET + " total downloads",
+            "- Birth: " + Codes.BOLD + Codes.LIGHT_GREEN + created + Codes.RESET + " - Last Update: " + Codes.BOLD + Codes.LIGHT_GREEN + lastUpdated,
+            "- Latest file: " + Codes.BOLD + Codes.LIGHT_GREEN + latestFileName + Codes.RESET + ", a " + Codes.BOLD + Codes.LIGHT_GREEN +
+            latestFileType + Codes.RESET + " for " + Codes.BOLD + Codes.LIGHT_GREEN + latestFileCBVersion +
+            Codes.RESET + " (" + Codes.BOLD + Codes.LIGHT_GREEN + latestFileDate + Codes.RESET + ')'
+         };
+         receiver.sendMessage(messages);
+      } else {
+         receiver.sendMessage(Codes.BOLD + pluginName + Codes.RESET + " by " + author + " - " + Codes.LIGHT_GREEN + url + " - DLs (monthly/total): " + Codes.BOLD + monthlyDownloads + Codes.RESET + '/' + Codes.BOLD + totalDownloads);
+      }
       return true;
    }
 
