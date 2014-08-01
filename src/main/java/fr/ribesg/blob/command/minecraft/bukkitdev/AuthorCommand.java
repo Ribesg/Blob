@@ -134,6 +134,7 @@ public class AuthorCommand extends Command {
 
                final Callable<Plugin> pluginCallable = () -> {
                   final Plugin plugin = new Plugin();
+                  plugin.name = pluginName;
                   try {
                      final Document pluginDoc = WebUtil.parseHtml(WebUtil.get(pluginUrl));
                      try {
@@ -192,10 +193,10 @@ public class AuthorCommand extends Command {
 
       if (mode == -1) {
          // Oneline mode
-         messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + "] " + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " ( " + shortUrl + ") - " + Codes.GREEN + userInfo.plugins.size() + Codes.RESET + "p - DLs (m/t): " + Codes.BOLD + Codes.LIGHT_GREEN + userInfo.totalMonthly + Codes.RESET + " / " + Codes.BOLD + Codes.LIGHT_GREEN + userInfo.totalTotal + Codes.RESET + " - Now: " + Codes.BOLD + userInfo.lastLogin);
+         messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + "] " + IrcUtil.preventPing(userInfo.name) + Codes.RESET + " (" + Codes.LIGHT_GREEN + shortUrl + Codes.RESET + ") - " + Codes.LIGHT_GREEN + userInfo.plugins.size() + Codes.RESET + " plugins - DLs (m/t): " + Codes.BOLD + Codes.LIGHT_GREEN + userInfo.totalMonthly + Codes.RESET + " / " + Codes.BOLD + Codes.LIGHT_GREEN + userInfo.totalTotal + Codes.RESET + " - Now: " + Codes.BOLD + userInfo.lastLogin);
       } else {
          if (userInfo.plugins.isEmpty()) {
-            messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + "] " + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " (" + shortUrl + ") | Reputation: " + userInfo.reputation + " | No Projects");
+            messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + "] " + IrcUtil.preventPing(userInfo.name) + Codes.RESET + " (" + shortUrl + ") | Reputation: " + userInfo.reputation + " | No Projects");
             messages.add("Join date: " + userInfo.joined + " | Status: " + userInfo.lastLogin);
             if (userInfo.state.contains("Banned")) {
                messages.add("Ban reason: " + userInfo.banReason);
@@ -203,7 +204,7 @@ public class AuthorCommand extends Command {
          } else {
             final Iterator<Plugin> it = userInfo.plugins.iterator();
 
-            messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + ']' + Codes.RESET + IrcUtil.preventPing(userInfo.name) + " (" + Codes.LIGHT_GREEN + shortUrl + Codes.RESET + ") | Reputation: " + Codes.BOLD + userInfo.reputation + Codes.RESET + " | Projects: " + Codes.BOLD + userInfo.plugins.size());
+            messages.add(Codes.BOLD + '[' + userInfo.state + Codes.RESET + Codes.BOLD + "] " + IrcUtil.preventPing(userInfo.name) + Codes.RESET + " (" + Codes.LIGHT_GREEN + shortUrl + Codes.RESET + ") | Reputation: " + Codes.BOLD + userInfo.reputation + Codes.RESET + " | Projects: " + Codes.BOLD + userInfo.plugins.size());
             messages.add("Join date: " + Codes.BOLD + userInfo.joined + Codes.RESET + " | Status: " + Codes.BOLD + userInfo.lastLogin);
             if (userInfo.state.contains("Banned")) {
                messages.add("Ban reason: " + Codes.BOLD + userInfo.banReason);
