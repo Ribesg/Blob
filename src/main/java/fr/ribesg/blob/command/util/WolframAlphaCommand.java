@@ -34,10 +34,17 @@ public class WolframAlphaCommand extends Command {
          return false;
       }
 
+      int timeout = 5_000;
+      if (primaryArgument != null) {
+         try {
+            timeout = Integer.parseInt(primaryArgument);
+         } catch (final NumberFormatException ignored) {}
+      }
+
       final String query = StringUtils.join(args, " ");
       final String response;
       try {
-         response = WebUtil.get("http://api.wolframalpha.com/v2/query?input=" + URLEncoder.encode(query, "UTF-8") + "&appid=" + URLEncoder.encode(BlobClient.getConfig().getWolframAlphaAppId(), "UTF-8"));
+         response = WebUtil.get("http://api.wolframalpha.com/v2/query?input=" + URLEncoder.encode(query, "UTF-8") + "&appid=" + URLEncoder.encode(BlobClient.getConfig().getWolframAlphaAppId(), "UTF-8"), timeout);
       } catch (final IOException e) {
          Log.error(e.getMessage(), e);
          receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to contact WolframAlpha API!");
