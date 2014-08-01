@@ -37,7 +37,7 @@ public class WolframAlphaCommand extends Command {
       final String query = StringUtils.join(args, " ");
       final String response;
       try {
-         response = WebUtil.get("http://api.wolframalpha.com/v2/query?input=" + URLEncoder.encode(query, "UTF-8") + "&appid=" + URLEncoder.encode(BlobClient.getConfig().getWolframAlphaAppId()));
+         response = WebUtil.get("http://api.wolframalpha.com/v2/query?input=" + URLEncoder.encode(query, "UTF-8") + "&appid=" + URLEncoder.encode(BlobClient.getConfig().getWolframAlphaAppId(), "UTF-8"));
       } catch (final IOException e) {
          Log.error(e.getMessage(), e);
          receiver.sendMessage(Codes.RED + user.getName() + ", failed to contact WolframAlpha API!");

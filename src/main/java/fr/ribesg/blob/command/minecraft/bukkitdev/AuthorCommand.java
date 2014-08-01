@@ -12,7 +12,6 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
-import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
@@ -160,7 +159,7 @@ public class AuthorCommand extends Command {
                plugin.monthlyDownloadCount = getNbDownloads(pluginDocument.select("li.average-downloads").get(0).ownText());
                plugin.totalDownloadCount = getNbDownloads(pluginDocument.select("li.downloads").get(0).ownText());
             } catch (final Exception e) {
-               Log.error(e);
+               Log.error(e.getMessage(), e);
                plugin.lastUpdate = Codes.RED + "Not found on Curse!" + Codes.RESET;
                plugin.monthlyDownloadCount = "0";
                plugin.totalDownloadCount = "0";

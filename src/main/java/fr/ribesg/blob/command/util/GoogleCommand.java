@@ -11,7 +11,6 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
-import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
 
@@ -60,7 +59,8 @@ public class GoogleCommand extends Command {
          } catch (final IOException ignored) {}
          receiver.sendMessage(message + shortUrl);
       } catch (final UnsupportedEncodingException e) {
-         Log.error(e);
+         receiver.sendMessage(Codes.RED + user.getName() + ", failed to encode URL!");
+         Log.error(e.getMessage(), e);
       }
       return true;
    }
