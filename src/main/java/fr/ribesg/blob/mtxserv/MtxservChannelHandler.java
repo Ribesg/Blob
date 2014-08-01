@@ -11,7 +11,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MtxservChannelHandler {
@@ -21,19 +25,19 @@ public class MtxservChannelHandler {
    private final BlobClient client;
 
    boolean enabled;
-   final List<String> admins;
-   final List<String> pingables;
+   final Set<String> admins;
+   final Set<String> pingables;
    final List<String> welcomeMessage;
 
-   final List<String> seenBeforeList;
+   final Set<String> seenBeforeList;
 
    public MtxservChannelHandler(final BlobClient client) {
       this.client = client;
       this.enabled = true;
-      this.admins = new CopyOnWriteArrayList<>();
-      this.pingables = new CopyOnWriteArrayList<>();
+      this.admins = new ConcurrentSkipListSet<>();
+      this.pingables = new ConcurrentSkipListSet<>();
       this.welcomeMessage = new CopyOnWriteArrayList<>();
-      this.seenBeforeList = new CopyOnWriteArrayList<>();
+      this.seenBeforeList = new ConcurrentSkipListSet<>();
       this.load();
    }
 
@@ -99,10 +103,10 @@ public class MtxservChannelHandler {
       final YamlDocument yaml = new YamlDocument();
 
       yaml.set("enabled", this.enabled);
-      yaml.set("admins", this.admins);
-      yaml.set("pingables", this.pingables);
+      yaml.set("admins", new ArrayList<>(this.admins));
+      yaml.set("pingables", new ArrayList<>(this.pingables));
       yaml.set("welcomeMessage", this.welcomeMessage);
-      yaml.set("seenBeforeList", this.seenBeforeList);
+      yaml.set("seenBeforeList", new ArrayList<>(this.seenBeforeList));
 
       yamlFile.getDocuments().add(yaml);
       try {
@@ -133,9 +137,10 @@ public class MtxservChannelHandler {
             this.welcomeMessage.forEach((message) -> channel.sendMessage(message.replace("%%", userName)));
 
             if (!this.pingables.isEmpty()) {
-               final StringBuilder builder = new StringBuilder("Ping " + this.pingables.get(0));
-               for (int i = 1; i < this.pingables.size(); i++) {
-                  builder.append(", ").append(this.pingables.get(i));
+               final Iterator<String> it = this.pingables.iterator();
+               final StringBuilder builder = new StringBuilder("Ping " + it.next());
+               while (it.hasNext()) {
+                  builder.append(", ").append(it.next());
                }
                channel.sendMessage(builder.toString());
             }
