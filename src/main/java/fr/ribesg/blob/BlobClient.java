@@ -22,6 +22,7 @@ import fr.ribesg.blob.command.minecraft.mcstats.GlobalMCStatsCommand;
 import fr.ribesg.blob.command.minecraft.mcstats.MCStatsCommand;
 import fr.ribesg.blob.command.util.GoogleCommand;
 import fr.ribesg.blob.command.util.ShortenCommand;
+import fr.ribesg.blob.command.util.UrbanCommand;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -77,6 +78,7 @@ public class BlobClient extends Client {
       // Util
       manager.registerCommand(new ShortenCommand());
       manager.registerCommand(new GoogleCommand());
+      manager.registerCommand(new UrbanCommand());
    }
 
    @Override
