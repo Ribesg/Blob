@@ -13,6 +13,9 @@ import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -42,9 +45,8 @@ public class GoogleCommand extends Command {
       for (int i = 1; i < args.length; i++) {
          request.append(' ').append(args[i]);
       }
-
       try {
-         WebUtil.get("http://www.google." + site);
+         WebUtil.get("http://www.google." + site, 1_000);
       } catch (IOException e) {
          receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + Codes.LIGHT_BLUE + "http://www.google." + site + "/" + Codes.RED + " doesn't seem to be a thing");
          return true;
@@ -52,12 +54,43 @@ public class GoogleCommand extends Command {
 
       try {
          final String url = URLEncoder.encode(String.format(GOOGLE_URL, site) + request, "UTF-8");
-         final String message = Codes.LIGHT_GRAY + '\'' + request + "' on google." + Codes.BOLD + site + Codes.RESET + Codes.LIGHT_GRAY + ": " + Codes.LIGHT_GREEN;
+         final String response;
+         try {
+            response = WebUtil.get(url);
+         } catch (IOException e) {
+            receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to get response from Google!");
+            Log.error(e.getMessage(), e);
+            return true;
+         }
+
+         final String link;
+         final String desc;
+         try {
+            final Document page = WebUtil.parseHtml(response);
+            final Elements results = page.select("li.g");
+            final Element result = results.get(0);
+            link = result.select("h3.r a").get(0).attr("href");
+            final StringBuilder descBuilder = new StringBuilder();
+            result.select("div.s span.st").get(0).childNodes().forEach((node) -> {
+               if (node instanceof Element) {
+                  if (!((Element) node).tagName().equals("span")) {
+                     descBuilder.append(((Element) node).text());
+                  }
+               } else {
+                  descBuilder.append(node.toString());
+               }
+            });
+            desc = descBuilder.toString();
+         } catch (final Throwable t) {
+            receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to parse response from Google!");
+            Log.error(t.getMessage(), t);
+            return true;
+         }
          String shortUrl = url;
          try {
-            shortUrl = WebUtil.shortenUrl(url);
+            shortUrl = WebUtil.shortenUrl(link);
          } catch (final IOException ignored) {}
-         receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + message + shortUrl);
+         receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + shortUrl + " - " + desc);
       } catch (final UnsupportedEncodingException e) {
          receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to encode URL!");
          Log.error(e.getMessage(), e);
