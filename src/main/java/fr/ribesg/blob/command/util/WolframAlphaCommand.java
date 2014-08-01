@@ -44,14 +44,29 @@ public class WolframAlphaCommand extends Command {
          return true;
       }
 
+      final Document xmlDocument;
       try {
-         final Document xmlDocument = WebUtil.parseXml(response);
-         final Element primary = xmlDocument.getElementsByAttributeValue("primary", "true").get(0);
-         final String text = primary.getElementsByTag("plaintext").get(0).text();
-         receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + text);
+         xmlDocument = WebUtil.parseXml(response);
       } catch (final Throwable t) {
          Log.error("Failed to parse WolframAlpha API response", t);
+         Log.debug("Response was: \n" + response);
          receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to parse WolframAlpha API response!");
+         return true;
+      }
+
+      try {
+         final Element root = xmlDocument.getElementsByTag("queryresult").get(0);
+         if ("false".equals(root.attr("success"))) {
+            receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "No result.");
+         } else {
+            final Element primary = xmlDocument.getElementsByAttributeValue("primary", "true").get(0);
+            final String text = primary.getElementsByTag("plaintext").get(0).text();
+            receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + text);
+         }
+      } catch (final Throwable t) {
+         Log.error("Failed to parse WolframAlpha API response", t);
+         Log.debug("Response was: \n" + response);
+         receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "unsupported response kind, see logs to debug and implement!");
       }
       return true;
    }
