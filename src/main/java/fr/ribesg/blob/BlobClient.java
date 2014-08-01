@@ -12,6 +12,7 @@ import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.blob.command.bot.JoinCommand;
+import fr.ribesg.blob.command.bot.NickServCommand;
 import fr.ribesg.blob.command.bot.PartCommand;
 import fr.ribesg.blob.command.bot.QuitCommand;
 import fr.ribesg.blob.command.minecraft.MCNameCommand;
@@ -94,6 +95,7 @@ public class BlobClient extends Client {
       manager.registerCommand(new JoinCommand());
       manager.registerCommand(new PartCommand());
       manager.registerCommand(new QuitCommand(this));
+      manager.registerCommand(new NickServCommand());
 
       // Util
       manager.registerCommand(new ShortenCommand());
