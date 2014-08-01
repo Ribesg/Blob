@@ -34,6 +34,7 @@ public class MtxservChannelHandler {
       this.pingables = new CopyOnWriteArrayList<>();
       this.welcomeMessage = new CopyOnWriteArrayList<>();
       this.seenBeforeList = new CopyOnWriteArrayList<>();
+      this.load();
    }
 
    public void load() {
