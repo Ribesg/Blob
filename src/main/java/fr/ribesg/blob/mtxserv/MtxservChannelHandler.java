@@ -42,7 +42,7 @@ public class MtxservChannelHandler {
       if (!Files.exists(path)) {
          this.admins.add("mTxServ^Snk");
          this.pingables.add("mTxServ^Snk");
-         this.welcomeMessage.add("Bienvenue ### !");
+         this.welcomeMessage.add("Bienvenue %% !");
          this.seenBeforeList.add("mTxServ^Snk");
          this.save();
       } else {
@@ -130,7 +130,7 @@ public class MtxservChannelHandler {
          final String userName = user.getName();
          if (!this.seenBeforeList.contains(userName) && !this.admins.contains(userName)) {
             this.seenBeforeList.add(userName);
-            this.welcomeMessage.forEach((message) -> channel.sendMessage(message.replace("###", userName)));
+            this.welcomeMessage.forEach((message) -> channel.sendMessage(message.replace("%%", userName)));
 
             if (!this.pingables.isEmpty()) {
                final StringBuilder builder = new StringBuilder("Ping " + this.pingables.get(0));

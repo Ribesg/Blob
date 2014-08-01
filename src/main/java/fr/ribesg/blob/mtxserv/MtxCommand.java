@@ -22,7 +22,7 @@ public class MtxCommand extends Command {
          "             ## ping <\"add\"|\"del\"> [name]",
          "             ## admins <\"add\"|\"del\"> <name>",
          "             ## enable|disable",
-         " Utilisez ### dans un message pour utiliser le pseudo de l'utilisateur"
+         " Utilisez %% dans un message pour utiliser le pseudo de l'utilisateur"
       });
       this.mtxserv = mtxserv;
    }
