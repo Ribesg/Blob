@@ -87,6 +87,11 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -147,6 +152,7 @@
 							<include>fr.ribesg.alix:alix</include>
 							<include>org.jsoup:jsoup</include>
 							<include>com.google.code.gson:gson</include>
+							<include>org.apache.commons:commons-lang3</include>
 						</includes>
 					</artifactSet>
 				</configuration>
