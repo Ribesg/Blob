@@ -18,7 +18,6 @@ import fr.ribesg.blob.command.minecraft.bukkitdev.AuthorCommand;
 import fr.ribesg.blob.command.minecraft.bukkitdev.PluginCommand;
 import fr.ribesg.blob.command.minecraft.mcstats.GlobalMCStatsCommand;
 import fr.ribesg.blob.command.minecraft.mcstats.MCStatsCommand;
-import fr.ribesg.blob.command.util.GoogleCommand;
 import fr.ribesg.blob.command.util.ShortenCommand;
 import fr.ribesg.blob.command.util.UrbanCommand;
 import fr.ribesg.blob.command.util.WolframAlphaCommand;
@@ -100,7 +99,6 @@ public class BlobClient extends Client {
 
       // Util
       manager.registerCommand(new ShortenCommand());
-      manager.registerCommand(new GoogleCommand());
       manager.registerCommand(new UrbanCommand());
       manager.registerCommand(new WolframAlphaCommand());
 
