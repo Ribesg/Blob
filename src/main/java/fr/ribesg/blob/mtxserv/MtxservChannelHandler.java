@@ -122,7 +122,7 @@ public class MtxservChannelHandler {
    }
 
    public void onClientJoinChannel(final Channel channel) {
-      if (this.enabled && "#mtxserv".equals(channel.getName()) && channel.getServer().getUrl().contains("quakenet")) {
+      if (this.enabled && "#mtxserv".equals(channel.getName()) && "QuakeNet".equals(channel.getServer().getName())) {
          this.seenBeforeList.addAll(channel.getUserNicknames());
          this.save();
       }
@@ -130,7 +130,7 @@ public class MtxservChannelHandler {
 
 
    public void onUserJoinChannel(final Source user, final Channel channel) {
-      if (this.enabled && "#mtxserv".equals(channel.getName()) && channel.getServer().getUrl().contains("quakenet")) {
+      if (this.enabled && "#mtxserv".equals(channel.getName()) && "QuakeNet".equals(channel.getServer().getName())) {
          final String userName = user.getName();
          if (!this.seenBeforeList.contains(userName) && !this.admins.contains(userName)) {
             this.seenBeforeList.add(userName);

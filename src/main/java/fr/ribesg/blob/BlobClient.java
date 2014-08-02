@@ -71,7 +71,7 @@ public class BlobClient extends Client {
 
       Log.info("Configuration loaded! Registered servers:");
       for (final Server server : this.getServers()) {
-         Log.info("- Server @ " + server.getUrl() + ':' + server.getPort() + ", SSL=" + server.getSslType());
+         Log.info("- Server " + server.getName() + " @ " + server.getUrl() + ':' + server.getPort() + ", SSL=" + server.getSslType());
          Log.info("  With channels:");
          for (final Channel channel : server.getChannels()) {
             Log.info("  - " + channel.getName());
@@ -131,7 +131,7 @@ public class BlobClient extends Client {
 
    @Override
    public void onServerJoined(final Server server) {
-      if (this.config.hasEsperNetNickServAutoIdentify() && server.getUrl().contains("esper")) {
+      if (this.config.hasEsperNetNickServAutoIdentify() && "EsperNet".equals(server.getName())) {
          final Source source = new Source(server, "NickServ", "NickServ", "NickServ@services.esper.net");
          source.sendMessage("IDENTIFY " + this.config.getEsperNetNickServPass());
       }

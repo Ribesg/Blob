@@ -31,7 +31,7 @@ public class MtxCommand extends Command {
    public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
       final Receiver receiver = channel == null ? user : channel;
 
-      if (!server.getUrl().contains("quakenet")) {
+      if (!"QuakeNet".equals(server.getName())) {
          receiver.sendMessage(Codes.RED + (channel == null ? "T" : user.getName() + ", t") + "his should be used on QuakeNet.");
          return true;
       }
