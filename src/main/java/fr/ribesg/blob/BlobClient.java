@@ -8,10 +8,7 @@ package fr.ribesg.blob;
 
 import fr.ribesg.alix.api.*;
 import fr.ribesg.alix.api.bot.command.CommandManager;
-import fr.ribesg.blob.command.bot.JoinCommand;
-import fr.ribesg.blob.command.bot.NickServCommand;
-import fr.ribesg.blob.command.bot.PartCommand;
-import fr.ribesg.blob.command.bot.QuitCommand;
+import fr.ribesg.blob.command.bot.*;
 import fr.ribesg.blob.command.minecraft.MCNameCommand;
 import fr.ribesg.blob.command.minecraft.MCStatusCommand;
 import fr.ribesg.blob.command.minecraft.bukkitdev.AuthorCommand;
@@ -97,6 +94,7 @@ public class BlobClient extends Client {
       manager.registerCommand(new PartCommand());
       manager.registerCommand(new QuitCommand(this));
       manager.registerCommand(new NickServCommand());
+      manager.registerCommand(new PingCommand());
 
       // Util
       manager.registerCommand(new ShortenCommand());
