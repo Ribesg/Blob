@@ -72,6 +72,7 @@ public class MCStatsCommand extends Command {
             shortUrl = WebUtil.shortenUrl(pluginStatsURL);
          } catch (final IOException e) {
             shortUrl = pluginStatsURL;
+            Log.error("Failed to shorten URL '" + pluginStatsURL + "'", e);
          }
          messages.add(Codes.BOLD + "MCStats " + Codes.GREEN + stats.name + Codes.RESET + " - Rank: " + Codes.BOLD + stats.rank + Codes.RESET + " (" + colorizeDiff(stats.rankDiff, true) + ") - " + shortUrl);
          messages.add(Codes.UNDERLINE + "Servers|" + Codes.RESET + " Now: " + Codes.BOLD + stats.servers + Codes.RESET + " | Diff: " + colorizeDiff(stats.serversDiff, false) + " | Max: " + Codes.LIGHT_GREEN + stats.serversMax + Codes.RESET + " | Month: ~" + Codes.LIGHT_GREEN + stats.serversAverage);

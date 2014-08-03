@@ -39,7 +39,7 @@ public class ShortenCommand extends Command {
          receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + shortUrl);
       } catch (final IOException e) {
          receiver.sendMessage(Codes.RED + (channel == null ? "" : user.getName() + ", ") + "failed to shorten URL");
-         Log.error("Failed to shorten URL", e);
+         Log.error("Failed to shorten URL '" + url + "'", e);
       }
       return true;
    }

@@ -1,15 +1,7 @@
 package fr.ribesg.blob.command.util;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import fr.ribesg.alix.api.Channel;
-import fr.ribesg.alix.api.Log;
-import fr.ribesg.alix.api.Receiver;
-import fr.ribesg.alix.api.Server;
-import fr.ribesg.alix.api.Source;
+import com.google.gson.*;
+import fr.ribesg.alix.api.*;
 import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
@@ -22,7 +14,7 @@ import java.net.URLEncoder;
 public class UrbanCommand extends Command {
 
    public UrbanCommand() {
-      super("urban", new String[] {
+      super("urban", new String[]{
          "Find something on UrbanDictionary",
          "Usage: ##[.number] <query>"
       }, "u");
@@ -91,7 +83,7 @@ public class UrbanCommand extends Command {
                      definitionUrl = definitionObject.getAsJsonPrimitive("url").getAsString();
                      String shortUrl;
                      try {
-                        shortUrl = WebUtil.shortenUrl(url);
+                        shortUrl = WebUtil.shortenUrl(definitionUrl);
                      } catch (IOException e) {
                         Log.error("Failed to shorten URL '" + definitionUrl + "'", e);
                         shortUrl = url;

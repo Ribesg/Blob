@@ -151,6 +151,7 @@ public class AuthorCommand extends Command {
                         plugin.url = WebUtil.shortenUrl(pluginUrl);
                      } catch (final Throwable t) {
                         plugin.url = pluginUrl;
+                        Log.error("Failed to shorten URL '" + pluginUrl + "'", t);
                      }
                      return plugin;
                   } catch (final IOException ex) {
@@ -189,6 +190,7 @@ public class AuthorCommand extends Command {
          shortUrl = WebUtil.shortenUrl(userInfo.profilePageLink);
       } catch (final IOException e) {
          shortUrl = userInfo.profilePageLink;
+         Log.error("Failed to shorten URL '" + userInfo.profilePageLink + "'", e);
       }
 
       if (mode == -1) {

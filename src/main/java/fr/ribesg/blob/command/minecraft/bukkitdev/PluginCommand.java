@@ -5,12 +5,8 @@
  */
 
 package fr.ribesg.blob.command.minecraft.bukkitdev;
-import fr.ribesg.alix.api.Channel;
-import fr.ribesg.alix.api.Client;
-import fr.ribesg.alix.api.Log;
-import fr.ribesg.alix.api.Receiver;
-import fr.ribesg.alix.api.Server;
-import fr.ribesg.alix.api.Source;
+
+import fr.ribesg.alix.api.*;
 import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.bot.util.IrcUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
@@ -28,14 +24,14 @@ import java.util.concurrent.Future;
 
 public class PluginCommand extends Command {
 
-   private static final String BUKKITDEV_URL         = "http://dev.bukkit.org";
+   private static final String BUKKITDEV_URL = "http://dev.bukkit.org";
    private static final String BUKKITDEV_PLUGINS_URL = BUKKITDEV_URL + "/bukkit-plugins/";
-   private static final String CURSE_URL             = "http://www.curse.com/bukkit-plugins/minecraft/";
+   private static final String CURSE_URL = "http://www.curse.com/bukkit-plugins/minecraft/";
 
    private SimpleDateFormat dateFormat;
 
    public PluginCommand() {
-      super("plugin", new String[] {
+      super("plugin", new String[]{
          "Look up a BukkitDev Plugin",
          "Usage: ## <name> [\"more\"]"
       });
@@ -121,9 +117,13 @@ public class PluginCommand extends Command {
       }
 
       // Shorten the latest File url
-      try {
-         latestFileUrl = WebUtil.shortenUrl(latestFileUrl);
-      } catch (final IOException ignored) {}
+      if (latestFileUrl != null) {
+         try {
+            latestFileUrl = WebUtil.shortenUrl(latestFileUrl);
+         } catch (final IOException e) {
+            Log.error("Failed to shorten URL '" + latestFileUrl + "'", e);
+         }
+      }
 
       // Shorten the BukkitDev Page url
       String url;
@@ -131,6 +131,7 @@ public class PluginCommand extends Command {
          url = WebUtil.shortenUrl(BUKKITDEV_PLUGINS_URL + args[0]);
       } catch (final IOException e) {
          url = BUKKITDEV_PLUGINS_URL + args[0];
+         Log.error("Failed to shorten URL '" + BUKKITDEV_PLUGINS_URL + args[0] + "'", e);
       }
 
       // Send
