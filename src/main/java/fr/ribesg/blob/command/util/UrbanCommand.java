@@ -86,7 +86,7 @@ public class UrbanCommand extends Command {
                         shortUrl = WebUtil.shortenUrl(definitionUrl);
                      } catch (IOException e) {
                         Log.error("Failed to shorten URL '" + definitionUrl + "'", e);
-                        shortUrl = url;
+                        shortUrl = definitionUrl;
                      }
                      receiver.sendMessage((channel == null ? "" : user.getName() + ", ") + definitionString + '(' + shortUrl + ')');
                   } else {
