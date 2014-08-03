@@ -24,6 +24,7 @@ import fr.ribesg.blob.command.util.WolframAlphaCommand;
 import fr.ribesg.blob.config.BlobConfiguration;
 import fr.ribesg.blob.mtxserv.MtxCommand;
 import fr.ribesg.blob.mtxserv.MtxservChannelHandler;
+import org.apache.log4j.Level;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -124,6 +125,11 @@ public class BlobClient extends Client {
             channel.sendMessage("Plop");
          }
          this.mtxserv.onClientJoinChannel(channel);
+         if ("EsperNet".equals(channel.getServer().getName()) && "#blob".equals(channel.getName())) {
+            Log.setLogChannel(channel);
+            Log.setLogChannelLevel(Level.ERROR);
+            Log.setPasteErrors(true);
+         }
       });
    }
 
