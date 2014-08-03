@@ -77,7 +77,10 @@ public class UrbanCommand extends Command {
             if (definitionElement.isJsonObject()) {
                final JsonObject definitionObject = definitionElement.getAsJsonObject();
                if (definitionObject.has("definition")) {
-                  final String definitionString = definitionObject.getAsJsonPrimitive("definition").getAsString();
+                  String definitionString = definitionObject.getAsJsonPrimitive("definition").getAsString();
+                  if (definitionString.length() > 200) {
+                     definitionString = definitionString.substring(0, 197) + "...";
+                  }
                   final String definitionUrl;
                   if (definitionObject.has("url")) {
                      definitionUrl = definitionObject.getAsJsonPrimitive("url").getAsString();
