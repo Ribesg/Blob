@@ -121,14 +121,12 @@ public class BlobClient extends Client {
       Log.debug("DEBUG: Updating users...");
       channel.updateUsers(() -> {
          Log.debug("DEBUG: Users updated!");
-         if (channel.getUserNicknames().contains("Willie")) {
-            channel.sendMessage("Plop");
-         }
          this.mtxserv.onClientJoinChannel(channel);
          if ("EsperNet".equals(channel.getServer().getName()) && "#blob".equals(channel.getName())) {
             Log.setLogChannel(channel);
             Log.setLogChannelLevel(Level.ERROR);
             Log.setPasteErrors(true);
+            channel.sendMessage("Enabled!");
          }
       });
    }
