@@ -93,7 +93,7 @@ public class BlobClient extends Client {
       manager.registerCommand(new JoinCommand());
       manager.registerCommand(new PartCommand());
       manager.registerCommand(new QuitCommand(this));
-      manager.registerCommand(new NickServCommand());
+      manager.registerCommand(new MsgCommand());
       manager.registerCommand(new PingCommand());
 
       // Util
