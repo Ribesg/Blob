@@ -6,9 +6,22 @@
 
 package fr.ribesg.blob;
 
-import fr.ribesg.alix.api.*;
+import fr.ribesg.alix.api.Channel;
+import fr.ribesg.alix.api.Client;
+import fr.ribesg.alix.api.EventManager;
+import fr.ribesg.alix.api.Log;
+import fr.ribesg.alix.api.Server;
+import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.CommandManager;
-import fr.ribesg.blob.command.bot.*;
+import fr.ribesg.alix.api.event.ClientJoinChannelEvent;
+import fr.ribesg.alix.api.event.EventHandler;
+import fr.ribesg.alix.api.event.ServerJoinEvent;
+import fr.ribesg.alix.api.event.UserJoinChannelEvent;
+import fr.ribesg.blob.command.bot.JoinCommand;
+import fr.ribesg.blob.command.bot.MsgCommand;
+import fr.ribesg.blob.command.bot.PartCommand;
+import fr.ribesg.blob.command.bot.PingCommand;
+import fr.ribesg.blob.command.bot.QuitCommand;
 import fr.ribesg.blob.command.minecraft.MCNameCommand;
 import fr.ribesg.blob.command.minecraft.MCStatusCommand;
 import fr.ribesg.blob.command.minecraft.bukkitdev.AuthorCommand;
@@ -110,12 +123,14 @@ public class BlobClient extends Client {
       Log.addFilter(Pattern.quote(this.config.getWolframAlphaAppId()), "**********");
       Log.addFilter(Pattern.quote(this.config.getEsperNetNickServPass()), "**********");
 
+      EventManager.getInstance().registerHandlers(this);
+
       return true;
    }
 
-   @Override
-   public void onClientJoinChannel(final Channel channel) {
-      // Anti-shitty Willie
+   @EventHandler(ignoreConsumed = false)
+   public void onClientJoinChannel(final ClientJoinChannelEvent event) {
+      final Channel channel = event.getChannel();
       Log.debug("DEBUG: Updating users...");
       channel.updateUsers(() -> {
          Log.debug("DEBUG: Users updated!");
@@ -129,16 +144,17 @@ public class BlobClient extends Client {
       });
    }
 
-   @Override
-   public void onServerJoined(final Server server) {
+   @EventHandler(ignoreConsumed = false)
+   public void onServerJoined(final ServerJoinEvent event) {
+      final Server server = event.getServer();
       if (this.config.hasEsperNetNickServAutoIdentify() && "EsperNet".equals(server.getName())) {
          final Source source = new Source(server, "NickServ", "NickServ", "NickServ@services.esper.net");
          source.sendMessage("IDENTIFY " + this.config.getEsperNetNickServPass());
       }
    }
 
-   @Override
-   public void onUserJoinChannel(final Source user, final Channel channel) {
-      this.mtxserv.onUserJoinChannel(user, channel);
+   @EventHandler(ignoreConsumed = false)
+   public void onUserJoinChannel(final UserJoinChannelEvent event) {
+      this.mtxserv.onUserJoinChannel(event.getUser(), event.getChannel());
    }
 }

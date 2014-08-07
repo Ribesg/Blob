@@ -13,14 +13,14 @@ import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
 import fr.ribesg.alix.api.callback.Callback;
 import fr.ribesg.alix.api.enums.Codes;
+import fr.ribesg.alix.api.event.ReceivedPacketEvent;
 import fr.ribesg.alix.api.message.IrcPacket;
 import fr.ribesg.alix.api.message.JoinIrcPacket;
-import fr.ribesg.alix.internal.network.ReceivedPacketEvent;
 
 public class JoinCommand extends Command {
 
    public JoinCommand() {
-      super("join", new String[]{
+      super("join", new String[] {
          "Ask me to join a/some channel(s)",
          "Usage: ## <channel[,...]>"
       }, true, null);
