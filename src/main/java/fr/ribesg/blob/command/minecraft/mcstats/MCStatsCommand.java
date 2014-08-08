@@ -53,11 +53,11 @@ public class MCStatsCommand extends Command {
 
          final String mcStatsURL = "http://mcstats.org/plugin/";
          final String pluginStatsURL = mcStatsURL + args[0];
-         final Document doc = WebUtil.parseHtml(WebUtil.get(pluginStatsURL));
+         final Document doc = WebUtil.parseHtml(WebUtil.get(pluginStatsURL, 15_000));
          final PluginStats stats = PluginStats.get(doc);
 
          try {
-            final String globalStatsJsonString = WebUtil.get("http://api.mcstats.org/1.0/" + stats.name + "/graph/Global+Statistics");
+            final String globalStatsJsonString = WebUtil.get("http://api.mcstats.org/1.0/" + stats.name + "/graph/Global+Statistics", 15_000);
             stats.getMaxAverage(new JsonParser().parse(globalStatsJsonString).getAsJsonObject());
          } catch (Exception e) {
             Log.error(e.getMessage(), e);
@@ -78,7 +78,7 @@ public class MCStatsCommand extends Command {
          messages.add(Codes.UNDERLINE + "Servers|" + Codes.RESET + " Now: " + Codes.BOLD + stats.servers + Codes.RESET + " | Diff: " + colorizeDiff(stats.serversDiff, false) + " | Max: " + Codes.LIGHT_GREEN + stats.serversMax + Codes.RESET + " | Month: ~" + Codes.LIGHT_GREEN + stats.serversAverage);
          messages.add(Codes.UNDERLINE + "Players|" + Codes.RESET + " Now: " + Codes.BOLD + stats.players + Codes.RESET + " | Diff: " + colorizeDiff(stats.playersDiff, false) + " | Max: " + Codes.LIGHT_GREEN + stats.playersMax + Codes.RESET + " | Month: ~" + Codes.LIGHT_GREEN + stats.playersAverage);
 
-         final String authModeJsonString = WebUtil.get("http://api.mcstats.org/1.0/" + stats.name + "/graph/Auth+Mode");
+         final String authModeJsonString = WebUtil.get("http://api.mcstats.org/1.0/" + stats.name + "/graph/Auth+Mode", 15_000);
          if (!authModeJsonString.contains("NO DATA")) {
             final JsonObject authModeJson = new JsonParser().parse(authModeJsonString).getAsJsonObject();
             final JsonArray array = authModeJson.getAsJsonArray("data");

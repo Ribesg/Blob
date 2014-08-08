@@ -15,7 +15,6 @@ import fr.ribesg.alix.api.Receiver;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
-import fr.ribesg.alix.api.bot.command.CommandManager;
 import fr.ribesg.alix.api.bot.util.ArtUtil;
 import fr.ribesg.alix.api.bot.util.WebUtil;
 import fr.ribesg.alix.api.enums.Codes;
@@ -99,7 +98,7 @@ public class GlobalMCStatsCommand extends Command {
 
       public GlobalStats() throws IOException {
          final String apiUrl = "http://api.mcstats.org/1.0/All+Servers/graph/Global+Statistics";
-         final String jsonString = WebUtil.get(apiUrl);
+         final String jsonString = WebUtil.get(apiUrl, 15_000);
          final JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
          final JsonObject data = jsonObject.getAsJsonObject("data");
          final JsonArray playersArray = data.getAsJsonArray("Players");
@@ -222,7 +221,7 @@ public class GlobalMCStatsCommand extends Command {
 
       public AuthStats() throws IOException {
          final String authUrl = "http://api.mcstats.org/1.0/All+Servers/graph/Auth+Mode";
-         final String jsonString = WebUtil.get(authUrl);
+         final String jsonString = WebUtil.get(authUrl, 15_000);
          final JsonObject authModeJson = new JsonParser().parse(jsonString).getAsJsonObject();
          final JsonArray array = authModeJson.getAsJsonArray("data");
 
