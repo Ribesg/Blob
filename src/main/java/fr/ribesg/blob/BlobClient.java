@@ -123,7 +123,7 @@ public class BlobClient extends Client {
       Log.addFilter(Pattern.quote(this.config.getWolframAlphaAppId()), "**********");
       Log.addFilter(Pattern.quote(this.config.getEsperNetNickServPass()), "**********");
 
-      EventManager.getInstance().registerHandlers(this);
+      EventManager.register(this);
 
       return true;
    }
