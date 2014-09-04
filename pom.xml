@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>fr.ribesg.alix</groupId>
 			<artifactId>alix</artifactId>
-			<version>0.5-SNAPSHOT</version>
+			<version>[0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jsoup</groupId>
