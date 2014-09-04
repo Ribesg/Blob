@@ -9,8 +9,6 @@ import fr.ribesg.alix.api.Channel;
 import fr.ribesg.alix.api.Server;
 import fr.ribesg.alix.api.Source;
 import fr.ribesg.alix.api.bot.command.Command;
-import fr.ribesg.alix.api.bot.command.CommandManager;
-import fr.ribesg.alix.api.message.PartIrcPacket;
 
 public class PartCommand extends Command {
 
@@ -25,7 +23,7 @@ public class PartCommand extends Command {
    public boolean exec(final Server server, final Channel channel, final Source user, final String primaryArgument, final String[] args) {
       if (args.length == 0) {
          channel.sendMessage("Bye!");
-         server.send(new PartIrcPacket(channel.getName()));
+         channel.part();
       } else {
          boolean silent = false;
          for (final String arg : args) {
@@ -44,7 +42,7 @@ public class PartCommand extends Command {
                if (!silent) {
                   otherChannel.sendMessage(user.getName() + " told me I should leave this channel, bye!");
                }
-               server.send(new PartIrcPacket(otherChannel.getName()));
+               otherChannel.part();
             }
          }
       }
