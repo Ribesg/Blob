@@ -23,7 +23,7 @@ public object Log {
 
     private fun filter(message: String): String {
         var result = message
-        for ((regex, replacement) in filters) {
+        for ((regex, replacement) in this.filters) {
             result = result.replaceAll(regex, replacement)
         }
         return result

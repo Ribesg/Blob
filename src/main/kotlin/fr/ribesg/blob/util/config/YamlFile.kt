@@ -34,12 +34,12 @@ public class YamlFile(filePath: String) {
         if (!Files.exists(this.filePath)) {
             Files.createFile(this.filePath)
         } else {
-            this.loadFromString(Files.readAllLines(this.filePath, CHARSET).join("\n"))
+            this.loadFromString(Files.readAllLines(this.filePath, YamlFile.CHARSET).join("\n"))
         }
     }
 
     public fun loadFromString(string: String) {
-        YAML.loadAll(string).forEach {
+        YamlFile.YAML.loadAll(string).forEach {
             [suppress("UNCHECKED_CAST")]
             this.docs.add(YamlDocument(it as MutableMap<String, Any>))
         }
@@ -49,7 +49,7 @@ public class YamlFile(filePath: String) {
         Files.write(
                 this.filePath,
                 this.saveToString().split("\n").asIterable(),
-                CHARSET,
+                YamlFile.CHARSET,
                 StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
         )
     }
@@ -59,7 +59,7 @@ public class YamlFile(filePath: String) {
         this.docs.forEach {
             raw.add(it.asMap())
         }
-        return YAML.dumpAll(raw.iterator())
+        return YamlFile.YAML.dumpAll(raw.iterator())
     }
 
     override fun equals(other: Any?): Boolean {
