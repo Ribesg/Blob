@@ -44,8 +44,6 @@ public object Blob {
             builder.server(server.host).server(server.port)
             if (server.pass != null) builder.serverPassword(server.pass)
 
-            builder.messageDelay(1000) // TODO Config or dynamic value
-
             builder.listenException {
                 Log.error("Exception from " + server.name + "'s client:", it)
             }
