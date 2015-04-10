@@ -1,6 +1,5 @@
 package fr.ribesg.blob.util.config
 
-import java.lang.Class
 import java.util.LinkedHashMap
 
 /**
@@ -15,7 +14,8 @@ public open class ConfigurationSection(val map: MutableMap<String, Any> = Linked
         return o != null && clazz.isInstance(o)
     }
 
-    public fun <T> getAs(key: String, clazz: Class<T>): T {
+    [suppress("BASE_WITH_NULLABLE_UPPER_BOUND")] // This warning may be a bug
+    public fun <T> getAs(key: String, clazz: Class<T>): T? {
         return if (this.hasOfType(key, clazz)) clazz.cast(this.map[key]) else null
     }
 
@@ -81,7 +81,6 @@ public open class ConfigurationSection(val map: MutableMap<String, Any> = Linked
     public fun isSection(key: String): Boolean
             = this.hasOfType(key, javaClass<Map<String, Any>>())
 
-    [suppress("UNNECESSARY_SAFE_CALL")] // It's a bug in IntelliJ IDEA's Kotlin plugin, the safe call _is_ necessary.
     public fun getSection(key: String): ConfigurationSection?
             = this.getAs(key, javaClass<MutableMap<String, Any>>())?.let { ConfigurationSection(it) }
 

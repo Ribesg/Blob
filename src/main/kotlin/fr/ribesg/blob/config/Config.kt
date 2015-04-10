@@ -94,6 +94,7 @@ public class Config(val fileName: String) {
     }
 
     private fun newConfig() {
+        Log.info("Configuration file not found, creating a blank one")
         Config.getDefaultBotConfig(this.fileName).save()
         this.load()
     }

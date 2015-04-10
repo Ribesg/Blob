@@ -5,5 +5,11 @@ package fr.ribesg.blob
  */
 
 fun main(args: Array<String>) {
+    Runtime.getRuntime().addShutdownHook(object : Thread() {
+        override fun run() {
+            Blob.stop("Bot killed!")
+        }
+    })
+
     Blob.start()
 }
