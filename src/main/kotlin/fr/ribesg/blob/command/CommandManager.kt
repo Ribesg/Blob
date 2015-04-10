@@ -22,7 +22,8 @@ public class CommandManager(val prefix: Char = '+') {
     fun onChannelMessageEvent(event: ChannelMessageEvent) {
         val message = event.getMessage()
         if (event.getMessage().startsWith(this.prefix)) {
-            val commandName = message.substring(1, message.indexOf(' '))
+            val firstSpace = message.indexOf(' ')
+            val commandName = message.substring(1, if (firstSpace > 0) firstSpace else message.length())
             this.commands[commandName]?.exec(
                     event.getClient(),
                     event.getChannel(),
@@ -37,11 +38,12 @@ public class CommandManager(val prefix: Char = '+') {
         val message = event.getMessage()
         val commandName: String
         val args: Array<String>
+        val firstSpace = message.indexOf(' ')
         if (event.getMessage().startsWith(this.prefix)) {
-            commandName = message.substring(1, message.indexOf(' '))
+            commandName = message.substring(1, if (firstSpace > 0) firstSpace else message.length())
             args = message.substring(commandName.length() + 1).split("\\s")
         } else {
-            commandName = message.substring(0, message.indexOf(' '))
+            commandName = message.substring(0, if (firstSpace > 0) firstSpace else message.length())
             args = message.substring(commandName.length()).split("\\s")
         }
         this.commands[commandName]?.exec(event.getClient(), null, event.getActor(), args)
