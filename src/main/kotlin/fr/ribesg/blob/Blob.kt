@@ -36,6 +36,11 @@ public object Blob {
             val server = it
             val builder = ClientBuilder()
 
+            builder.nick(server.nick)
+            builder.realName(this.config.mainNick)
+            builder.user(this.config.mainNick)
+            builder.name(server.name)
+
             builder.server(server.host).server(server.port)
             if (server.pass != null) builder.serverPassword(server.pass)
 
