@@ -1,5 +1,6 @@
 package fr.ribesg.blob.util.config
 
+import java.lang.Class
 import java.util.LinkedHashMap
 
 /**
