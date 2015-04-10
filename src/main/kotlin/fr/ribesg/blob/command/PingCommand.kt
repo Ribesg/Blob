@@ -8,14 +8,17 @@ import org.kitteh.irc.client.library.element.User
  * @author Ribesg
  */
 
-public class PingCommand : Command {
+public class PingCommand(prefix: Char) : Command(prefix) {
 
-    override fun exec(client: Client, to: Channel?, from: User, args: Array<String>) {
+    init {
+        this.usage = this.prefix + "ping"
+    }
+
+    override fun exec(client: Client, from: User, to: Channel?, primArg: String?, args: Array<String>) {
         if (to == null) {
             from.sendMessage("Pong!")
         } else {
             to.sendMessage(from.getNick() + ", pong!")
         }
     }
-
 }

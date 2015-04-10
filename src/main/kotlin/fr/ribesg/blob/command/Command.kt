@@ -2,14 +2,22 @@ package fr.ribesg.blob.command
 
 import org.kitteh.irc.client.library.Client
 import org.kitteh.irc.client.library.element.Channel
+import org.kitteh.irc.client.library.element.MessageReceiver
 import org.kitteh.irc.client.library.element.User
 
 /**
  * @author Ribesg
  */
 
-public trait Command {
+public abstract class Command(protected val prefix: Char) {
 
-    public fun exec(client: Client, to: Channel?, from: User, args: Array<String>)
+    protected var usage: String? = null
 
+    public abstract fun exec(client: Client, from: User, to: Channel?, primArg: String?, args: Array<String>)
+
+    protected fun sendUsage(to: MessageReceiver) {
+        if (this.usage != null) {
+            to.sendNotice("Usage: " + this.usage)
+        }
+    }
 }
