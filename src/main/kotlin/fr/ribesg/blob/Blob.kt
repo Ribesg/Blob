@@ -45,15 +45,15 @@ public object Blob {
             if (server.pass != null) builder.serverPassword(server.pass)
 
             builder.listenException {
-                Log.error("Exception from " + server.name + "'s client:", it)
+                Log.error("ERROR    @ " + server.name, it)
             }
 
             builder.listenInput {
-                Log.debug("Received message on " + server.name + "'s client: " + it)
+                Log.debug("RECEIVED @ " + server.name + ": " + it)
             }
 
             builder.listenOutput {
-                Log.debug("Sent message with " + server.name + "'s client: " + it)
+                Log.debug("SENT     @ " + server.name + ": " + it)
             }
 
             val client = builder.build()
