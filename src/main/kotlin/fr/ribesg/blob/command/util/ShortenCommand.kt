@@ -28,13 +28,13 @@ public class ShortenCommand(prefix: Char) : Command(prefix) {
             try {
                 val shortUrl = WebUtil.shortenUrl(url);
                 if (to == null) {
-                    from.sendMessage("Result: " + shortUrl)
+                    from.sendMessage("Result: $shortUrl")
                 } else {
-                    to.sendMessage(from.getName() + ", " + shortUrl)
+                    to.sendMessage(from.getName() + ", $shortUrl")
                 }
             } catch (e: IOException) {
                 from.sendRedNotice(Codes.RED + "Failed!")
-                Log.error("Failed to shorten URL '" + url + "'", e);
+                Log.error("Failed to shorten URL '$url'", e);
             }
         }
     }

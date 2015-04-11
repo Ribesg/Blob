@@ -1,5 +1,6 @@
-package fr.ribesg.blob.command
+package fr.ribesg.blob.command.bot
 
+import fr.ribesg.blob.command.Command
 import org.kitteh.irc.client.library.Client
 import org.kitteh.irc.client.library.element.Channel
 import org.kitteh.irc.client.library.element.User

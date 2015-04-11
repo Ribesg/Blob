@@ -45,15 +45,15 @@ public object Blob {
             if (server.pass != null) builder.serverPassword(server.pass)
 
             builder.listenException {
-                Log.error("ERROR    @ " + server.name, it)
+                Log.error("ERROR    @ ${server.name}", it)
             }
 
             builder.listenInput {
-                Log.debug("RECEIVED @ " + server.name + ": " + it)
+                Log.debug("RECEIVED @ ${server.name}: " + it)
             }
 
             builder.listenOutput {
-                Log.debug("SENT     @ " + server.name + ": " + it)
+                Log.debug("SENT     @ ${server.name}: " + it)
             }
 
             val client = builder.build()
@@ -67,7 +67,7 @@ public object Blob {
     }
 
     public fun stop(reason: String) {
-        Log.info("Stopping bot: " + reason)
+        Log.info("Stopping bot: $reason")
         this.clients.values().forEach { it.shutdown(reason) }
     }
 }

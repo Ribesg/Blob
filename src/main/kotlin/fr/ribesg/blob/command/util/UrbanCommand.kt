@@ -60,39 +60,42 @@ public class UrbanCommand(prefix: Char) : Command(prefix) {
                 return
             }
 
-            if (jsonResponse.isJsonArray()) {
-                val array = jsonResponse.getAsJsonArray()
-                val size = array.size()
+            if (!jsonResponse.isJsonArray()) return
+
+            val array = jsonResponse.getAsJsonArray()
+            val size = array.size()
+            if (definitionNumber > size) {
                 if (size == 0) {
                     (to ?: from).sendMessage(from.getNick() + ", no results")
-                } else if (definitionNumber > size) {
-                    (to ?: from).sendMessage(from.getNick() + ", no such definition number")
                 } else {
-                    val definitionElement = array.get(definitionNumber - 1);
-                    if (definitionElement.isJsonObject()) {
-                        val definitionObject = definitionElement.getAsJsonObject();
-                        if (definitionObject.has("definition")) {
-                            var definitionString = definitionObject.getAsJsonPrimitive("definition").getAsString()
-                            if (definitionString.length() > 200) {
-                                definitionString = definitionString.substring(0, 197) + "..."
-                            }
-                            if (definitionObject.has("url")) {
-                                val definitionUrl = definitionObject.getAsJsonPrimitive("url").getAsString()
-                                val shortUrl = try {
-                                    WebUtil.shortenUrl(definitionUrl)
-                                } catch (e: IOException) {
-                                    Log.error("Failed to shorten URL '" + definitionUrl + "'", e)
-                                    definitionUrl
-                                }
-                                (to ?: from).sendMessage(from.getNick() + ", " + definitionString + '(' + shortUrl + ')')
-                            } else {
-                                (to ?: from).sendMessage(from.getNick() + ", " + definitionString)
-                            }
-                        } else {
-                            from.sendRedNotice("Malformed response from API!")
-                            Log.error("Malformed response from API!")
-                        }
+                    (to ?: from).sendMessage(from.getNick() + ", no such definition number")
+                }
+                return
+            }
+
+            val definitionElement = array.get(definitionNumber - 1);
+            if (definitionElement.isJsonObject()) {
+                val definitionObject = definitionElement.getAsJsonObject();
+                if (definitionObject.has("definition")) {
+                    var definitionString = definitionObject.getAsJsonPrimitive("definition").getAsString()
+                    if (definitionString.length() > 200) {
+                        definitionString = definitionString.substring(0, 197) + "..."
                     }
+                    if (definitionObject.has("url")) {
+                        val definitionUrl = definitionObject.getAsJsonPrimitive("url").getAsString()
+                        val shortUrl = try {
+                            WebUtil.shortenUrl(definitionUrl)
+                        } catch (e: IOException) {
+                            Log.error("Failed to shorten URL '$definitionUrl'", e)
+                            definitionUrl
+                        }
+                        (to ?: from).sendMessage(from.getNick() + ", $definitionString ($shortUrl)")
+                    } else {
+                        (to ?: from).sendMessage(from.getNick() + ", $definitionString")
+                    }
+                } else {
+                    from.sendRedNotice("Malformed response from API!")
+                    Log.error("Malformed response from API!")
                 }
             }
         }

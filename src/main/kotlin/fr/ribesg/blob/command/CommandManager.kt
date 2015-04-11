@@ -1,5 +1,6 @@
 package fr.ribesg.blob.command
 
+import fr.ribesg.blob.command.bot.*
 import fr.ribesg.blob.command.util.ShortenCommand
 import fr.ribesg.blob.command.util.UrbanCommand
 import org.kitteh.irc.client.library.event.channel.ChannelMessageEvent
@@ -17,7 +18,13 @@ public class CommandManager(val prefix: Char = '+') {
 
     init {
         this.commands = HashMap()
+
+        this.commands.put("join", JoinCommand(this.prefix))
+        this.commands.put("msg", MsgCommand(this.prefix))
+        this.commands.put("part", PartCommand(this.prefix))
         this.commands.put("ping", PingCommand(this.prefix))
+        this.commands.put("quit", QuitCommand(this.prefix))
+
         this.commands.put("s", ShortenCommand(this.prefix))
         this.commands.put("urban", UrbanCommand(this.prefix))
     }

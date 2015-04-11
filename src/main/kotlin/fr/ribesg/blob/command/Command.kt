@@ -17,7 +17,7 @@ public abstract class Command(protected val prefix: Char) {
 
     protected fun sendUsage(to: MessageReceiver) {
         if (this.usage != null) {
-            to.sendNotice("Usage: " + this.usage)
+            to.sendNotice("Usage: ${this.usage}")
         }
     }
 }
